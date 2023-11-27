@@ -1,13 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @tailwind CSS 정리 */
+/* 3-2. */
+/* color, background-color : rgb(0,0,0, 0.4) bg-black/70 접두사-색상_이름-채도/불투명도 */
+/* font-size : text-xs/sm/base/lg/xl~5xl */
+/* font-weight : font-thin/light/normal/medium/bold/black */
+/* font-style : italic/non-italic */
+/* white-space : whitespace-normal/nowrap/pre/pre-line/pre-wrap */
+/* text-align : text-left/center/right/justify */
+/* line-clamp-3 */
+
+/* 3-3. */
+/* box-sizing : box-border/content // box-sizing : content-box | padding-box | border-box | inherit */
+/* width, height */
+/* w-screen width: 100vw; w-full width: 100% // h-screen heigth: 100vh; h-full height: 100% */
+/* width w-숫자 w-분자/분모 h-숫자 h-분자/분모 (분모는 2~6까지, 분자는 1~분모-1까지) */
+/* padding : p-숫자 p(x | y | t |  l | b | r)-숫자 */
+/* margin : m-숫자 m(x | y | t | l | b | r)-숫자 */
+/* background-image : url(이미지_URL); */
+/* background-size : bg-auto/cover/contain */
+/* border-width : border/-t/-r/-b/-l // border-(t | r | b | l)-(0 | 2 | 4 | 8) */
+/* border-style : border-solid/dashed/dotted/double/none */
+/* border-color : border-transparent/black/white */
+/* border-radius : rounded/-full/-sm/-md/-lg/-xl/-2xl  
+rounded-(t | b)-(sm | md | lg | xl | 2xl ...) rounded-(tl | tr | lb | br)-(sm | md | lg | xl) */
+/* display : hidden/block/inline-block/inline/flex */
+/* visibility : visible/invisible // display:none과 다르게 visibility는 화면에 보이지 않아도 요소의 크기는 반영됩니다. */
+/* position : absolute/relative // left/right/top/bottom = "1rem" */
+/* 만약 position : absolute를 사용하는 HTML 요소만 있다면 해당 요소는 HTML의 최상위 요소인 <html> 태그를 기준으로 합니다.
+하지만 해당 요소의 여러 부모 컨테이너 중 position : relative를 설정한 컨테이너가 있다면,
+해당 요소에서 가장 가까운 컨테이너 영역이 기준이 됩니다. */
+/* z-index : z-0/10/20/30/40/50/auto */
+
+/* 3-4. */
+/* display : flex */
+/* flex-direction : flex-row/flex-row-reverse/flex-col/flex-col-reverse */
+/* overflow : overflow-auto/hidden/visible/scroll */
+/* flex-wrap : flex-wrap/-wrap-reverse/-nowrap */
+/* min-width/max-width/min-height/max-height : min-w-숫자/max-w-숫자/min-h-숫자/max-h-숫자 */
+/* justify-content : justify-start/end/center/between/around/evenly */
+/* align-items : items-start/end/center/baseline/stretch */
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+@import url('http://fonts.googleapis.com/icon?family=Material+Icons');
+
+.material-icons {
+    font-family: 'Material Icons';
+    display: inline-block;
 }
