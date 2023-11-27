@@ -1,4 +1,9 @@
 import './App.css'
+import ClickTest from './pages/4-5. ClickTest'
+import FileDrop from './pages/4-5. FileDrop'
+import InputFocusTest from './pages/4-5. ForwardRefTest'
+import InputValueTest from './pages/4-5. InputFocusTest'
+import ForwardRefTest from './pages/4-5. InputValueTest'
 
 // 2.5.
 // import DispatchEvent from './pages/2-5. DispatchEvent'
@@ -76,9 +81,12 @@ import './App.css'
 // import NumberState from './pages/4-3. NumberState'
 
 // 4-4.
-import FetchTest from './pages/4-4. FetchTest'
-import WindowResizeTest from './pages/4-4. WindowResizeTest'
-import ClassLifeCycle from './pages/4-4. ClassLifecycle'
+// import FetchTest from './pages/4-4. FetchTest'
+// import WindowResizeTest from './pages/4-4. WindowResizeTest'
+// import ClassLifeCycle from './pages/4-4. ClassLifecycle'
+
+// 4-5.
+import ValidatableInputTest from './pages/4-5. ValidatableInputTest'
 
 export default function App() {
     // // let today = useRef(new Date())
@@ -256,7 +264,7 @@ export default function App() {
             <InputTest />
             <NumberState /> */}
 
-            {/* 4.4 useEffect, useLayoutEffect */}
+            {/* 4.4 useEffect, useLayoutEffect, fetch/promise */}
             {/* 리액트 프레임워크는 컴포넌트를 생성하고 렌더링하다가 어떤 시점이 되면 소멸합니다.
                 이런 과정을 컴포넌트의 생명 주기라고 표현합니다. */}
             {/* 리액트 컴포넌트는 가상 DOM 객체 형태로 생성되어 어떤 시점에 물리 DOM 트리의 맴버 객체가 되며,
@@ -343,9 +351,49 @@ export default function App() {
                     catch()가 Error 객체를 넘겨 주므로 어떤 오류가 발생했는지 알 수 있습니다. 
                 - finally() 메서드는 then()이나 catch()의 콜백 함수가 호출된 다음, 
                     항상 자신에 설정된 콜백 함수를 호출해 줍니다. */}
-            <FetchTest />
+            {/* 조건이 있는 JSX 문을 만들 때는 {조건 && ()} 형태의 코드를 먼저 만든 다음,
+                소괄호 안에 화면 UI를 구성하면 오류 없이 쉽게 만들 수 있습니다. */}
+            {/* <FetchTest />
             <WindowResizeTest />
-            <ClassLifeCycle />
+            <ClassLifeCycle /> */}
+
+            {/* 4.5 useRef, useImperativeHandle, forwardRef() 
+                - ref라는 속성에 적용하는 값을 만들어 주는 훅
+                리액트와 리액트 네이티브가 제공하는 컴포넌트는 모두 ref라는 이름의 속성을 가지고 있습니다. */}
+            {/* 모든 리액트 컴포넌트는 reference의 앞 3글자를 딴 ref 속성을 제공합니다. 그런데 ref 속성값은
+                사용자 코드에서 설정하는 것이 아니라 어떤 시점에 리액트 프레임워크 내부에서 설정해 줍니다.
+                ref 속성은 초기에는 null이었다가 마운트되는 시점에서 물리 DOM 객체의 값이 됩니다. 
+                즉, ref는 물리 DOM 객체의 참조입니다. */}
+            {/* HTML 요소들은 자바스크립트로는 DOM 타입 객체입니다. 예를 들어 <div>, <button>과 같은 요소는 
+                모두 HTMLElement 상속 타입인 HTMLDivElement, HTMLButtonElement 타입 객체입니다.
+                그리고 HTMLElement 타입은 click(), blur(), focus() 메서드를 제공합니다. 
+                이 메서드들은 리액트 요소가 가상 DOM 상태일 때는 호출할 수 없고, 물리 DOM 상태일 때만 호출할 수 있습니다.
+                ref 속성값은 물리 DOM 상태일 때의 값이므로 
+                ref로 얻은 값(즉, DOM 객체)을 사용해 click()과 같은 메서드를 호출할 수 있습니다.*/}
+            {/* ref 속성의 정의에서 타입이 Ref<T>임을 알 수 있습니다. 여기서 타입 변수 T는 HTMLElement와 같은 DOM 타입을 뜻합니다. */}
+            {/* ref 속성 정의 
+                interface RefAttributes<T> extends Attributes {
+                    ref?: Ref<T> | undefined;
+                }
+            */}
+            {/* Ref<T>는 다시 current라는 읽기 전용 속성을 가진 RefObject<T> 타입입니다. current는 null일 수 있습니다.
+                이는 리액트 요소가 마운트되기 전인 가상 DOM 타입일 때는 null이기 때문입니다.
+                또한 current는 리액트 내부에서 설정해 주는 값이므로 사용자 코드에서 리액트가 설정한 값을
+                임의로 다른 값으로 바꿀 수 없어야 합니다. 따라서 current는 읽기 전용 속성입니다. */}
+            {/* RefObject<T> 타입 정의
+                interface RefObject<T> {
+                    readonly current: T | null;
+                }
+                type Ref<T> = RefObject<T> | null;
+            */}
+            {/* const inputRef */}
+
+            <ValidatableInputTest />
+            <ForwardRefTest />
+            <InputValueTest />
+            <InputFocusTest />
+            <FileDrop />
+            <ClickTest />
         </main>
     )
 }
