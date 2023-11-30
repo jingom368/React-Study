@@ -1,7 +1,19 @@
-import React from 'react'
+import {useCallback, useRef} from 'react'
+import {Title} from '../components'
 
 export default function ClickTest() {
-  return (
-    <div>ClickTest</div>
-  )
+    const inputRef = useRef<HTMLInputElement>(null)
+    const onClick = useCallback(() => inputRef.current?.click(), [])
+
+    return (
+        <section className="mt-4">
+            <Title>ClickTest</Title>
+            <div className="mt-4 flex justify-center items-center">
+                <button className="btn bwtn-primary mr-4" onClick={onClick}>
+                    Click Me
+                </button>
+                <input ref={inputRef} className="hidden" type="file" accept="image/*" />
+            </div>
+        </section>
+    )
 }
