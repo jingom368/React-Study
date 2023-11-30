@@ -81,12 +81,20 @@ import './App.css'
 // import ClassLifeCycle from './pages/4-4. ClassLifecycle'
 
 // 4-5.
-import ClickTest from './pages/4-5. ClickTest'
-import FileDrop from './pages/4-5. e_FileDrop'
-import InputFocusTest from './pages/4-5. InputFocusTest'
-import InputValueTest from './pages/4-5. InputValueTest'
-import ForwardRefTest from './pages/4-5. ForwardRefTest'
-import ValidatableInputTest from './pages/4-5. ValidatableInputTest'
+// import ClickTest from './pages/4-5. ClickTest'
+// import FileDrop from './pages/4-5. e_FileDrop'
+// import InputFocusTest from './pages/4-5. InputFocusTest'
+// import InputValueTest from './pages/4-5. InputValueTest'
+// import ForwardRefTest from './pages/4-5. ForwardRefTest'
+// import ValidatableInputTest from './pages/4-5. ValidatableInputTest'
+
+// 4-6.
+// import {ResponsiveProvider} from './contexts'
+// import ResponsiveContextTest from './pages/4-6. ResponsiveContextTest'
+
+// 5-1.
+import ReduxClock from './pages/5-1. ReduxClock'
+import UseReducerClock from './pages/5-1. UseReducerClock'
 
 // prettier-ignore
 export default function App() {
@@ -107,6 +115,7 @@ export default function App() {
     // const today = useClock()
 
     return (
+        // <ResponsiveProvider>
         <main>
             {/* 2.5 */}
             {/* <FileDrop />
@@ -432,11 +441,13 @@ export default function App() {
 
             {/* 리액트는 항상 <input>의 value 속성과 관련해서 다음과 같은 패턴으로 코드를 작성하라고 요구합니다.
                 그런데 이런 패턴으로 코드를 작성하는 것은 조금 번거롭습니다. */}
-            {/* const [value, setValue] = useState<string>('') 
+            {/* 
+                const [value, setValue] = useState<string>('') 
                 const onChangeValue = (e: ChangeEvent<HTMLInputElement>) => 
                 setValue(notUsed => e.target.value) 
                 
-                <input value={value} onChange={onChangeValue} /> */}
+                <input value={value} onChange={onChangeValue} /> 
+            */}
             {/* 리액트가 이런 패턴의 코드를 요구하는 것은 가상 DOM 환경에서 빠른 리렌더링을 위해서입니다.
                 하지만 ref 속성이 유효한 값, 즉 물리 DOM 객체가 만들어지면 이 객체의 value 속성값을 곧바로 얻을 수 있습니다. */}
 
@@ -469,6 +480,9 @@ export default function App() {
             {/* "forwardRef는 render라는 함수를 매개변수로 받아서 반환 타입을 가지는 함수입니다. 
                 render 함수는 P 타입의 props와 Ref<T> 타입의 ref를 매개변수로 받아 React 요소를 반환합니다. 
                 여기서 T는 ref가 가리키는 대상의 타입, P는 컴포넌트가 받아들이는 props의 타입입니다." */}
+            {/* 반환 타입은 React.ForwardRefExoticComponent<P & React.RefAttributes<T>>입니다. 
+                이는 고차 컴포넌트(Higher Order Component, HOC)를 반환하는데, 
+                이 컴포넌트는 P 타입의 props와 T 타입의 ref를 받아들입니다. */}
 
             {/* React.ForwardRefExoticComponent<P & React.RefAttributes<T>>는 React의 타입 정의 중 하나로, 
                 forwardRef가 반환하는 컴포넌트의 타입을 나타냅니다. */}
@@ -498,12 +512,101 @@ export default function App() {
                 const dismissKeyboard = () => methodsRef.current?.dismiss() */}
             {/* 이떄 앞선 코드에서 useRef<TextInput | null>(null) 부분을 다음처럼 TextInput 대신 
                 TextInputMethods를 사용하면 어떨까 하는 것이 useImperativeHandle 훅의 탄생 배경입니다. */}
-            <ValidatableInputTest />
+
+            {/* useImperativeHandle 훅 타입 정의 */}
+            {/* function useImpoerativeHandle<T, R extends T>(ref: Ref<T> | undefined, 
+                init:() => R, deps?: DependencyList): void; */}
+            {/* 타입 정의에서 첫 번째 매개변수 ref는 forwardRef 호출로 얻은 값을 입력하는 용도이고, 
+                두 번째 매개변수 init은 useMemo 훅 때와 유사하게 '() => 메서드_객체' 형태의 함수를 입력하는 용도입니다.
+                다음 코드는 useMemo 훅과 useImperativeHandle 훅의 코드 사용법이 유사하다는 것을 보여 줍니다. */}
+            {/* const object = useMemo(() => ({}), []) */}
+            {/* const handle = useImperativeHandle(ref, () => ({}), []) */}
+            {/* 그런데 useImperativeHandle의 첫 번째 매개변수인 ref는 forwardRef 함수를 호출해 얻은 ref를 사용해야 합니다.
+                이는 useImperativeHandle 훅은 다른 훅과 달리 앞서 만든 Input과 같은 컴포넌트 내부에서만 사용해야 한다는 것을 의미합니다. */}
+
+            {/* T와 R extends T: 여기서 T는 사용자가 정의한 타입을 의미하며, R은 T의 확장된 타입을 의미합니다.
+                즉, R은 T를 포함하며, 추가적으로 더 많은 속성을 가질 수 있습니다. */} 
+            {/* ref: Ref<T> | undefined: 이 매개변수는 React의 ref 객체 또는 undefined를 받습니다. 
+                ref 객체를 통해 자식 컴포넌트의 인스턴스나 DOM 요소에 접근할 수 있습니다.  */}
+            {/* init:() => R: 이 매개변수는 함수를 받습니다. 이 함수는 아무런 인자를 받지 않고 R 타입의 값을 반환합니다. 
+                이 함수가 반환하는 값이 부모 컴포넌트에서 ref를 통해 접근할 수 있는 인스턴스 값입니다. */}
+            {/* deps?: DependencyList는 선택적 매개변수로, 의존성 목록을 나타냅니다. 
+                이 목록에 포함된 값이 변경될 때마다 init 함수가 다시 실행됩니다.  */}
+            {/* void는 이 Hook이 아무런 값을 반환하지 않음을 나타냅니다. */}
+            {/* 결국, useImperativeHandle는 "함수 init을 통해 생성된 R 타입의 인스턴스 값을 T 타입의 ref에 연결하고, 
+                이 연결은 deps에 명시된 값들의 변경에 따라 업데이트됩니다"라는 의미입니다. 
+                이 Hook을 통해 부모 컴포넌트는 자식 컴포넌트의 특정 인스턴스 값에 직접 접근할 수 있습니다. */}
+            {/* <ValidatableInputTest />
             <ForwardRefTest />
             <InputValueTest />
             <InputFocusTest />
             <FileDrop />
-            <ClickTest />
+            <ClickTest /> */}
+
+            {/* 4-6. createContext - Provider, useContext */}
+            {/* 컨텍스트란? */}
+            {/* 컨텍스트의 속성은 부모 컴포넌트가 자식 컴포넌트로 어떤 정보를 전달하려고 할 때 사용하는 메커니즘입니다.
+                그런데 부모 컴포넌트가 직계 자식이 아닌, 손자나 증손자 컴포넌트에 정보를 전달하려고 하면
+                다음 그림처럼 번거로운 속성 전달을 해야 합니다. */}
+            {/* 리액트는 이런 속성 전달의 번거로움을 해소하고자 컨텍스트라는 메커니즘을 구현해 놓았습니다.
+                리액트나 리액트 네이티브에서 컨텍스트는 createContext와 useContext 훅으로 이뤄지며,
+                이 둘의 관계는 다음 그림처럼 표현할 수 있습니다. - p.364 */}
+            {/* 컨텍스트 기능을 사용하는 리액와 리액트 네이티브 코드는 항상 이름에 'Provider'가 있는 컴포넌트와
+                'use컨텍스트_이름()' 형태의 커스텀 훅을 사용합니다.
+                컨텍스트 기능을 구현한 react-native-paper와 같은 패키지 또한 항상 Provider란 이름이 있는 컴포넌트와
+                Provider가 제공하는 정보를 사용할 수 있게 하는 useTheme과 같은 커스텀 훅을 제공합니다. */}
+
+            {/* createContext 함수 탐구 */}
+            {/* 타입스크립트에서 createContext 함수 호출은 다음과 같은 코드 패턴으로 작성해야 합니다. */}
+            {/* 
+                type ContextType = {
+                    // 공유할 데이터 속성
+                } 
+                const defaultContextValue: ContextType = {
+                    // 공유할 데이터 속성 초깃값
+                }
+                const SomeContext = createContext<ContextType>(defaultContextValue)
+            */}
+
+            {/* 컨텍스트 객체가 제공하는 Provider 컴포넌트 */}
+            {/* createContext 함수 호출로 생성된 컨텍스트 객체는 Provider와 Consumer라는 컴포넌트를 제공합니다.
+                여기서 Provider는 컨텍스트의 기능을 제공할 컴포넌트이고, 
+                Consumer는 Provider가 제공한 기능을 사용하고 싶은 클래스 컴포넌트입니다. 
+                그런데 이 책은 대부분 컴포넌트를 함수 형태로 구현하므로 Consumer는 무시해도 됩니다.
+                함수 컴포넌트는 클래스 컴포넌트와 달리 Consumer보다 훨씬 사용법이 단순한 useContext 훅을 사용하면 되기 때문입니다.*/}
+            {/* Provider 컴포넌트는 다음처럼 value와 Children 속성이 있는 ProviderProps 속성을 제공합니다.
+                여기서 타입 변수 T는 createContext<T>와 같아야 하고, children은 컴포넌트의 children 속성과 같습니다.
+                그리고 value 속성에 설정하는 값이 Provider 컨텍스트가 제공하는 기능이 됩니다. */}
+            {/* interface ProviderProps<T> {
+                value: T;
+                children?: ReactNode;
+            } */}
+
+            {/* ResponsiveProvider 컴포넌트 만들기 */}
+            {/* 다음 코드는 ResponsiveContext.Provider를 감싸는 RepsonsiveProvider 컴포넌트의 초기 구현 모습입니다.
+                ResponsiveContext.provider는 value와 children 속성을 제공한다는 것을 착안해 코드를 작성합니다. */}
+
+            {/* useContext */}
+            {/* useContext 훅은 컨텍스트 객체가 제공하는 
+                Provider 컴포넌트의 value 속성값을 얻을 수 있게 하는 목적으로 사용되는 훅입니다.  */}
+            {/* 
+                export const useResponsive = () => {
+                    const value = useContext(ResponsiveContext)
+                    return value.breakpoint
+                } 
+            */}
+            {/* useContext는 항상 컨텍스트 제공자의 value 속성값을 반환하므로 앞서 본 컨텍스트 제공자의
+                value 속성에 설정해 놓았던 breakpoint 멤버 속성값을 반환하고 있습니다. */}
+            
+            {/* 이처럼 컨텍스트는 최상위 부모 컴포넌트가 컨텍스트 제공자 컴포넌트를 통해 제공하는 기능을
+                자식뿐만 아니라 자손 컴포넌트들도 useContext 훅으로 사용할 수 있게 하는 기능입니다.
+                다음 장부터 설명하는 리덕스, 리액트 라우터 등 대부분의 리액트 기반 패키지들은
+                이 컨텍스트 기능으로 구현되었습니다. */}
+            {/* <ResponsiveContextTest /> */}
+
+            <UseReducerClock />
+            <ReduxClock
         </main>
+        // </ResponsiveProvider>
     )
 }
