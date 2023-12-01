@@ -93,8 +93,26 @@ import './App.css'
 // import ResponsiveContextTest from './pages/4-6. ResponsiveContextTest'
 
 // 5-1.
-import ReduxClock from './pages/5-1. ReduxClock'
-import UseReducerClock from './pages/5-1. UseReducerClock'
+// import ReduxClock from './pages/5-1. e_ReduxClock'
+// import UseReducerClock from './pages/5-1. UseReducerClock'
+// import {Provider as ReduxProvider} from 'react-redux'
+// import {useStore_b} from './store'
+// import type {Action} from 'redux'
+// import { configureStore } from '@reduxjs/toolkit'
+
+// const initialAppstate = {
+//     today: new Date()
+// }
+// const rootReducer = (state: AppState = initialAppstate, action: Action) => state
+// const store = configureStore({reducer: rootReducer, middleware: []})
+
+// 5-2.
+import {Provider as ReduxProvider} from 'react-redux'
+import { useStore } from './store'
+import ClockTest from './pages/5-2. ClockTest'
+import CounterTest from './pages/5-2. CounterTest'
+import RemoteUserTest from './pages/5-2. RemoteUserTest'
+import CardsTest from './pages/5-2. CardsTest'
 
 // prettier-ignore
 export default function App() {
@@ -114,9 +132,22 @@ export default function App() {
     // console.log('today', today)
     // const today = useClock()
 
+    // 5-1.
+    // const store = useStore_b()
+    
+    // 5-2.
+    const store = useStore()
+
     return (
+        // 4-6.
         // <ResponsiveProvider>
-        <main>
+        // <ReduxProvider store={store}>
+        // <main>
+        
+        // 5-2.
+        <ReduxProvider store = {store}> 
+        {/* <main className='p-8'> */}
+
             {/* 2.5 */}
             {/* <FileDrop />
             <DragDrop />
@@ -604,9 +635,284 @@ export default function App() {
                 이 컨텍스트 기능으로 구현되었습니다. */}
             {/* <ResponsiveContextTest /> */}
 
-            <UseReducerClock />
-            <ReduxClock
-        </main>
+            {/* 5-1. useReducer | 앱 수준 상태 - Provider/store, configureStore | useSelector - action/reducer |
+                useDispatch - dispatch <-> reducer | useReducer */}
+            {/* useState 훅은 컴포넌트가 유지해야 할 상태를 관리하는 용도로 사용됩니다.
+                그런데 여러 컴포넌트가 상태들을 함께 공유하는 형태로 만들 때가 많은데,
+                이처럼 앱을 구성하는 모든 컴포넌트가 함께 공유할 수 있는 상태를 
+                앱 수준 상태(app-level states) 줄여서 '앱 상태'라고 합니다. */}
+
+            {/* Provider 컴포넌트와 store 속성 */}
+            {/* 리덕스는 이랙트 컨텍스트에 기반을 둔 라이브러리입니다. 즉, 리덕스 기능을 사용하려면 리액트 컨텍스트의 
+                Provider 컴포넌트가 최상위로 동작해야 합니다. 따라서 react-redux 패키지는 다음처럼 Provider 컴포넌트를 제공합니다.*/}
+
+            {/* 리덕스 저장소와 리듀서, 액션 알아보기 */}
+            {/* 타입스크립트 언어로 리덕스 기능을 사용할 때는 먼저 다음처럼 앱 수준 상태를 표현하는
+                Appstate와 같은 타입을 선언해야 합니다. */}
+            {/* 리덕스 저장소(redux-store)는 AppState 타입 데이터를 저장하는 공간입니다. 그런데 리덕스 저장소를 생성하려면
+                리듀서라는 함수를 알아야 합니다. 리덕스에서 리듀서(reducer)는 현재 상태와 액션이라는 2가지 매개변수로
+                새로운 상태를 만들어서 반환합니다. */}
+            {/* Reducer 선언문
+                export type Reducer<S= any, A extends Action = AnyAction> = (
+                    state: S | undefined,
+                    action: A
+                ) => S
+            */}
+            {/* S: 상태(state)의 타입을 나타냅니다. 기본값으로 any가 지정되어 있어서 임의의 타입을 사용할 수 있습니다. 
+                주로 애플리케이션의 전체 상태 객체 타입이 할당됩니다.
+                A extends Action: 액션(action)의 타입을 나타냅니다. Action 타입을 상속하는 제네릭 타입으로 지정되어 있어서, 
+                Redux 액션 객체와 호환되는 타입을 사용할 수 있습니다.
+                (state: S | undefined, action: A) => S: Reducer 함수의 시그니처를 나타냅니다. 
+                state 매개변수는 이전 상태를 나타내며, action 매개변수는 디스패치된 액션 객체를 나타냅니다. 
+                이 함수는 현재 상태와 액션을 기반으로 새로운 상태를 계산하고 반환합니다.
+
+                Reducer 함수의 역할은 현재 상태와 액션을 받아서 새로운 상태를 반환하는 것입니다. 
+                이를 통해 Redux 스토어의 상태를 업데이트하고, 이후 컴포넌트들이 업데이트된 상태를 구독하여 사용할 수 있게 됩니다. 
+                Redux는 이러한 Reducer 함수들을 조합하여 애플리케이션의 전체 상태를 관리하고 업데이트하는 역할을 수행합니다. */}
+        
+            {/* 리듀서 선언문에 나오는 액션(action)은 플럭스에서 온 용어로서 
+                type이란 이름의 속성이 있는 평범한 자바스크립트 객체를 의미합니다.
+                redux 패키지는 다음처럼 액션 객체의 타입을 선언하고 있습니다. 
+                이 액션 선언문은 type 속성이 반드시 있어야 한다는 의미입니다. */}
+            {/* Action 선언문
+                export interface Action<T = any> {
+                    type: T
+                } */}
+            {/* T: 액션의 type 속성의 타입을 나타냅니다. 기본적으로 any 타입으로 지정되어 있어서 임의의 타입을 사용할 수 있습니다. 
+                주로 문자열이나 상수 열거형(enum) 타입이 할당됩니다. */}
+            {/* type: T: 액션의 유형을 식별하는 속성입니다. Redux에서 액션 객체를 디스패치할 때 
+                이 type 속성을 기반으로 리듀서(Reducer) 함수가 어떤 동작을 수행할지 결정합니다. 
+                type 속성은 액션의 유형을 나타내는 값이어야 합니다. */}
+            {/* {
+                    type: 'INCREMENT',
+                    payload: 10
+                } */}
+            {/* 위 예시에서 type 속성은 'INCREMENT'이고, payload 속성은 10입니다. 이 액션 객체를 디스패치하면, 
+                Redux는 type 속성을 기반으로 해당되는 리듀서 함수를 호출하고, 상태를 업데이트합니다. */}
+            {/* Action 인터페이스는 Redux에서 액션 객체의 구조를 정의하기 위해 사용됩니다. 
+            액션 객체는 애플리케이션의 상태 변화를 설명하는 정보를 담고 있으며, 이를 통해 Redux 스토어의 상태를 업데이트합니다. */}
+
+            {/* 스토어 객체 관리 함수 */}
+            {/* RTK 패키지는 리듀서에서 반환한 새로운 상태를 스토어라는 객체로 정리해 관리하는 configureStore 함수를 제공합니다. */}
+            {/* configureStore 함수 선언문
+                export declare function configureStore<S, A, M>(options: ConfigureStoreOptions<S, A, M>):
+                EnhancedStore<S, A, M>; */}
+            {/* S는 Redux store의 상태(state) 타입을 의미합니다.
+                A는 Redux store에서 처리할 액션(action)의 타입을 의미합니다.
+                M는 Redux store에서 사용하는 미들웨어(middleware)의 타입을 의미합니다.
+                
+                options: ConfigureStoreOptions<S, A, M>: 이 함수는 ConfigureStoreOptions 타입의 options 파라미터를 받습니다. 
+                options 객체는 Redux store의 설정을 담고 있습니다. 
+                ConfigureStoreOptions 타입은 Redux store의 상태, 액션, 미들웨어 등의 타입을 포함하며, 
+                reducer, middleware, devTools 등의 설정을 담고 있습니다.
+                
+                EnhancedStore<S, A, M>: 이 함수는 EnhancedStore 타입의 값을 반환합니다. 
+                EnhancedStore는 Redux Toolkit에서 제공하는 Redux store의 확장된 버전입니다. 
+                이는 기본 Redux store에 추가적인 기능들을 제공합니다. 
+                EnhancedStore의 타입 파라미터는 Redux store의 상태, 액션, 미들웨어의 타입입니다. */}
+
+            {/* 따라서 이 configureStore 함수는 주어진 options를 사용하여 Redux store를 생성하고 설정하며, 
+                생성된 Redux store를 반환합니다. 이 반환된 store는 애플리케이션의 상태를 관리하고, 
+                액션을 디스패치하고, 미들웨어를 적용하는 등의 역할을 합니다.. */}
+            
+            {/* export interface ConfigureStoreOptions<S, A, M> {
+                    reducer
+                    middleware?
+                    devTools?
+                    reloadedState?
+                    enhancers?
+                } */}
+            {/* - reducer: 이 속성은 Redux store의 리듀서를 설정하는 데 사용됩니다. 
+                    리듀서는 액션에 따라 상태를 어떻게 변경할지를 결정하는 함수입니다. 이 속성은 반드시 설정되어야 합니다.
+                - middleware?: 이 속성은 Redux store에 적용할 미들웨어를 설정하는 데 사용됩니다. 
+                    미들웨어는 액션이 디스패치되어 리듀서에서 처리되기 전에 수행되는 작업들을 정의합니다. 이 속성은 선택적입니다.
+                - devTools?: 이 속성은 Redux DevTools의 사용 여부를 설정하는 데 사용됩니다. 
+                    Redux DevTools는 Redux의 상태 변화를 시각적으로 확인할 수 있게 도와주는 개발 도구입니다. 이 속성은 선택적입니다.
+                - reloadedState?: 이 속성은 Redux store의 초기 상태를 설정하는 데 사용됩니다. 이 속성은 선택적입니다.
+                - enhancers?: 이 속성은 Redux store에 적용할 enhancer를 설정하는 데 사용됩니다. 
+                    enhancer는 Redux store의 기능을 확장하거나 변경하는 데 사용됩니다. 이 속성은 선택적입니다. */}
+            {/* 따라서 이 ConfigureStoreOptions 인터페이스는 configureStore 함수에 전달되는 옵션 객체의 형태를 정의합니다. 
+            이 옵션 객체를 통해 Redux store의 리듀서, 미들웨어, DevTools 사용 여부, 초기 상태, enhancer 등을 설정할 수 있습니다. */}
+
+            {/* useSelector 훅 사용하기 */}
+            {/* 이제 리덕스 저장소에 어떤 내용이 저장되었는지 알고자 스토어의 상탯값을 반환해 주는 useSelector 훅을 살펴보겠습니다. */}
+
+            {/* useSelector 선언문
+                export function useSelector<TState, TSelected> (
+                    selector: (state: TSSate) => TSelected
+                ): TSelected;
+            */}
+            {/* TState는 Redux Store의 상태(state) 타입을 의미합니다. TSelected는 선택된 상태의 타입을 의미합니다.
+                selector: (state: TState) => TSelected: 이 함수는 selector 함수를 파라미터로 받습니다. 
+                selector 함수는 Redux Store의 상태를 파라미터로 받아 TSelected 타입의 값을 반환합니다. 
+                이 selector 함수는 Redux Store의 전체 상태에서 필요한 부분만을 선택하여 반환하는 역할을 합니다.
+                TSelected: 이 함수는 TSelected 타입의 값을 반환합니다. 이 값은 selector 함수가 반환하는 값입니다. 
+                즉, Redux Store의 상태 중에서 선택된 부분의 상태입니다.*/}
+            {/* 따라서 이 useSelector 함수는 주어진 selector 함수를 사용하여 Redux Store의 상태를 선택하고 반환합니다. 
+                이 반환된 상태는 React 컴포넌트 내에서 사용될 수 있습니다. 
+                예를 들어, 다음과 같이 useSelector를 사용하여 Redux Store의 user 상태를 선택할 수 있습니다.
+                const user = useSelector((state) => state.user);
+                여기서 state.user는 Redux Store의 user 상태를 선택하는 selector 함수입니다. 
+                이 selector 함수가 반환하는 user 상태는 useSelector 훅이 반환하는 값이며, 
+                이 user 상태는 React 컴포넌트 내에서 사용될 수 있습니다. */}
+
+            {/* const today = useSelector<AppState, Date>(state => state.today) */}
+
+            {/* 리덕스 액션 알아보기 */}
+            {/* 앞서 구현한 ReduxClock 컴포넌트가 시계로서 동작하려면 리덕스 저장소의 today값을 현재 시각으로 변경해 줘야 합니다. 
+                이와 동시에 ReduxClock 컴포넌트를 다시 렌더링하여 바뀐 today값을 화면에 반영해야 합니다. */}
+            {/* 비록 샘플 코드는 리덕스 저장소에 today란 이름의 속성밖에 없지만, 좀 더 일반적인 관점으로 보면 today 외에
+                다른 멤버 속성들이 있을 수 있습니다. 그리고 시계를 만드는 코드는 리덕스 저장소의 다른 멤버 속성들의 값은
+                건드리지 않고, 오직 today 속성값만 변경해 줘야 합니다. */}
+            {/* 리덕스에서 액션은 저장소의 특정 속성값(여기서는 today)만 변경하고 싶을 때 사용하는 방법입니다. */}
+            {/* 액션의 type 속성은 리듀서에 switch-case문 같은 분기문을 써서 type 속성에 따라 적절하게 분기하도록 합니다. */}
+
+            {/* 리덕스 리듀서 알아보기 */}
+            {/* rootReducer.ts 파일에서 변수 이름만 다음처럼 바꿔보겠습니다. 
+                "첫 번째 매개변수에 담긴 과거 상탯값(prevState)을 바탕으로 새로운 상탯값(newState)를 반환한다"는
+                리듀서 함수의 목적이 분명해집니다.*/}
+            {/* 리덕스에서 리듀서를 구현할 때는 prevState, newState라는 이름 대신 그냥 state를 주로 사용합니다. */}
+
+            {/* useDispatch  */}
+            {/* dispatch() 함수를 사용하여 다음 코드 형태로 리덕스 저장소에 저장된 Appstate 객체의 멤버 전부나 일부를 변경할 수 있습니다. 
+                다음은 type 속성값이 'setToday'인 액션을 dispatch() 함수를 통해 리덕스 저장소로 보내는 코드입니다. */}
+            {/* dispatch({type: 'setToday', today: new Date()}) */}
+
+            {/* 리덕스 저장소와 리듀서 그리고 액션과 dispatch() 함수를 알아보았는데, 이들의 관계를 그림으로 표현하면 다음과 같습니다.
+                dispatch(액션) --> 리듀서 --> 리덕스 저장소 : 리덕스 저장소, 리듀서, 액션, dispatch 간의 관계*/}
+            {/* 이 그림은 리덕스 저장소에 저장된 앱 수준 상태의 일부 속성값을 변경하려면 일단 액션을 만들어야 한다는 것을 의미합니다.
+                그리고 액션은 반드시 dispatch() 함수로 리덕스 저장소에 전달해야 합니다.
+                그리고 액션이 리덕스 저장소에 전달될 때 리듀서가 관여합니다. */}
+            {/* 또한 다음 그림은 리듀서에 전달되는 두 매개변수 state와 action이 어떻게 만들어지는지를 보여 줍니다.
+                리덕스 저장소는 앱 수준 상태를 저장하는 것이 목적이므로 첫 번쩨 메게변숫값을 만들 수 있습니다. 
+                또한 액션은 반드시 dispatch() 함수로 전달되므로 dispatch(액션) 코드가 실행되면
+                두 번째 매개변수 action이 리듀서로 전달됩니다. 
+                function reducer(state: 리덕스 저장소, action : dispatch(액션)) : 리듀서에 전달되는 state와 action 매개변수 생성 주체*/}
+            
+            {/* 시계 완성하기 */}
+            {/* 이제 useDispatch 훅을 호출하여 dispatch() 함수를 얻고, dispatch(액셩)를 1초에 한 번씩 호출하여 시계를 완성해 보겠습니다. */}
+            {/* 앞서 구현한 useInterval 커스텀 훅을 사용해 현재 시각을 rootReducer에 보내는 방식으로 시계를 구현합니다. */}
+
+            {/* useReducer 훅 사용하기 */}
+            {/* useReducer 훅은 이름에서 알 수 있듯이 리덕스의 리듀서와 사실상 똑같은 기능을 수행합니다. 
+                useReducer 훅은 04장에서 본 다른 훅 함수들처럼 ReduxProvider와 같은 컨텍스트 없이 사용합니다. 
+                이 떄문에 리덕스의 상태는 앱의 모든 컴포넌트에서 접근할 수 있지만(즉, 전역 상태), 
+                useReducer 훅의 상태는 다른 훅 함수들처럼 useReducer 훅을 호출한 컴포넌트 안에서만 유효하다는(즉, 지역상태)
+                차이가 있습니다. */}
+            {/* useReducer 훅을 사용하면 여러 번의 useState와 useCallback 훅 호출 코드를 간결하게 구현할 수 있습니다. */}
+            {/* useReducer 훅 사용법 
+                const [상태, dispatch] = useReducer(리듀서, 상태_초깃값) */}
+
+            {/* Q. const [상태, dispatch] = useReducer(리듀서, 상태_초깃값)
+            이걸 지금까지 설명한 부분이랑 연결지어서 자세하게 설명해줄래? 어떻게 이렇게 쓸 수 있는 건지에 대해서? */}
+
+            {/* 네, useReducer 훅은 Redux의 기본 개념과 매우 유사하며, 상태 관리를 좀 더 간결하게 할 수 있는 React의 내장 훅입니다.
+                useReducer는 두 개의 인자를 받습니다: reducer와 initialState. reducer는 함수로, 
+                    현재 상태와 디스패치된 액션을 인자로 받아 새로운 상태를 반환합니다. initialState는 초기 상태값입니다.
+
+                useReducer는 두 개의 값을 튜플 형태로 반환합니다: 현재 상태와 디스패치 함수. 
+                    디스패치 함수는 액션을 인자로 받아 reducer를 실행시킵니다.
+
+                Redux에서 스토어가 액션을 받아 리듀서를 실행하는 것과 비슷한 역할을 합니다.
+
+                이를 지금까지 설명한 Redux와 연결지어 보면 다음과 같습니다.
+
+                1. 3. 상태와 액션 정의: AppState와 SetTodayAction처럼 상태와 액션의 타입을 정의합니다. 
+                    이는 useReducer의 initialState와 디스패치할 액션에 해당합니다.
+                4. 리듀서 정의: rootReducer처럼 액션의 타입에 따라 상태를 어떻게 변경할지 정의하는 리듀서를 정의합니다. 
+                    이는 useReducer의 reducer에 해당합니다.
+                5. 6. 상태 사용과 액션 디스패치: useSelector로 상태를 가져오고 useDispatch로 액션을 디스패치하는 것 대신, 
+                    useReducer는 상태와 디스패치 함수를 한 번에 제공합니다. 
+                    따라서 ReduxClock 컴포넌트에서 today 상태를 가져오는 것은 useReducer에서 반환받은 상태를 사용하는 것과 같으며, 
+                    'setToday' 액션을 디스패치하는 것은 useReducer에서 반환받은 디스패치 함수를 사용하는 것과 같습니다.
+                
+                따라서 useReducer를 사용하면 Redux와 비슷한 상태 관리를 좀 더 간결하게 할 수 있습니다. 
+                    하지만 useReducer는 컴포넌트 내부 상태를 관리하는 데에 주로 사용되며, 
+                    전역 상태 관리나 미들웨어 지원 등 Redux의 고급 기능은 제공하지 않습니다. 
+                    이런 경우에는 여전히 Redux를 사용하는 것이 더 적절할 수 있습니다. */}
+
+            {/* 그런데 리덕스의 리듀서와 useReducer 훅은 초기 상탯값을 설정하는 부분에 차이가 있습니다.
+                리덕스의 리듀서는 다음처럼 리듀서의 첫 번째 매개변수에 기본값을 설정합니다. */}
+            {/* 리덕스의 리듀서 기본값 설정 방법 
+                const initialState: AppState = {
+                    today: new Date()
+                }
+                export const rootReducer = (state: AppState = initialState, action: AppActions) => {}
+            */}
+            {/* 반면에 useReducer 훅은 두 번째 매개변수에 초깃값을 설정합니다. */}
+            {/* useReducer 훅 초기 상탯값 설정 방법
+                useReducer((state: AppState, action: AppActions) => {}, {today: new Date()}) */}         
+            {/* <UseReducerClock />
+            <ReduxClock /> */}
+
+            {/* <div /> */}
+            {/* 5-2. 리듀서 활용하기 */}
+            {/* react-redux 패키지가 버전 8이 되면서 리액트 버전 18에서는 ReduxProvider에 반드시 1개 이상의
+                자식 요소를 가져야 합니다. 따라서 <div /> 요소를 추가했습니다. */}
+
+            {/* 리듀서 합치기 */}
+            {/* combineReducers() 함수는 여러 리듀서를 통합하여 새로운 리듀서를 만들어 줍니다. */}
+            {/* combineReducers() 함수는 다음처럼 ReducerMapObject 타입 객체를 입력 매개변수로 받는 함수입니다.
+                여기서 타입 변수 S는 상태를 의미하며 이 절에서는 AppState가 이에 해당합니다. */}
+            {/* combineReducers 함수 선언문 
+                export function combine Reducers<S>(reducers: ReducerMapObject<S, any>):
+                Reducer<CombineState<S>>
+            */}
+            {/* 
+                combineReducers는 여러 개의 리듀서 함수를 하나로 묶어주는 Redux의 함수입니다. 
+                이렇게 하면 각 리듀서가 관리하는 상태를 하나의 큰 상태 객체로 조합할 수 있습니다. 
+                이 함수의 타입 정의를 자세히 살펴보겠습니다.
+                
+                export function combineReducers<S>(reducers: ReducerMapObject<S, any>): Reducer<CombineState<S>>
+                
+                <S>: 제네릭 변수로, 상태의 타입을 나타냅니다. 각 리듀서가 관리하는 상태의 타입을 정의합니다.
+                reducers: ReducerMapObject<S, any>: 매개변수로, 각 상태 키와 대응하는 리듀서 함수를 가진 객체입니다. 
+                ReducerMapObject는 { [K in keyof S]: Reducer<S[K]> }의 타입을 가지므로, 
+                각 상태 키에 대응하는 리듀서가 상태의 해당 부분을 처리하도록 정의됩니다.
+                Reducer<CombineState<S>>: 반환값으로, 조합된 리듀서 함수입니다. 
+                CombineState<S>는 { [K in keyof S]: S[K] }의 타입을 가지므로, 
+                각 상태 키에 대한 상태를 담은 하나의 큰 상태 객체를 반환합니다.
+
+                따라서 combineReducers는 각 상태 키와 대응하는 리듀서 함수를 가진 객체를 받아, 
+                하나의 큰 상태 객체를 반환하는 리듀서 함수를 반환합니다. 
+                이 반환된 리듀서 함수는 디스패치된 액션을 받아, 각 리듀서를 호출하여 상태를 업데이트하고, 
+                업데이트된 상태를 조합하여 반환합니다. 
+            */}
+            
+            {/* combineReducers() 함수의 매개변수 reducers는 ReducersMapObject 타입 객체입니다.
+                이 객체의 선언문을 보면 상태 타입의 키에 설정되는 값은
+                Reducer<State[Key], Action> 타입의 함수여야 한다는 것을 알 수 있습니다. */}
+            {/* ReducersMapObject 타입 선언문
+                export type ReducersMapObject<State = any, A extends Action = Action> = {
+                    [Key in keyof State]: Reducer<State[Key], A>
+                } 
+            */}
+            {/* 
+                ReducersMapObject는 Redux에서 여러 개의 리듀서를 하나의 객체로 묶을 때 사용하는 타입입니다. 
+                이 객체는 상태의 각 키에 대응하는 리듀서를 가지고 있습니다.
+
+                export type ReducersMapObject<State = any, A extends Action = Action> = { [Key in keyof State]: Reducer<State[Key], A> }
+
+                <State = any, A extends Action = Action>: 제네릭 변수로, State는 상태의 타입을, 
+                A는 액션의 타입을 나타냅니다. 디폴트 값으로는 모든 상태와 액션을 받을 수 있습니다.
+                { [Key in keyof State]: Reducer<State[Key], A> }: 객체의 타입 정의로, 상태의 각 키(Key)에 대응하는 리듀서를 가집니다. 
+                Reducer<State[Key], A>는 State[Key] 타입의 상태와 A 타입의 액션을 받아 State[Key] 타입의 상태를 반환하는 함수입니다.
+
+                즉, ReducersMapObject는 주어진 상태의 각 키에 대응하는 리듀서 함수를 가진 객체의 타입을 나타냅니다. 
+                이 리듀서 함수는 해당 키의 상태와 액션을 받아 새로운 상태를 반환합니다. 
+                이를 통해 각각의 리듀서가 상태의 특정 부분을 관리하도록 할 수 있습니다.
+            */}
+            <CardsTest />
+            <RemoteUserTest />
+            <CounterTest />
+            <ClockTest />
+            
+        {/* </main> */}
+        </ReduxProvider>
+
+        // 5-1.
+        // </ReduxProvider>
+        // 4-6.
         // </ResponsiveProvider>
     )
 }

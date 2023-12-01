@@ -1,3 +1,3 @@
 // prettier-ignore
 export const makeClassName = (setting: string, _className?: string, numberOfLines?: number) =>
-    [setting, , _className, numberOfLines ? `line-clamp-${numberOfLines}` : ''].join(' ')
+    [setting,  _className, numberOfLines ? `line-clamp-${numberOfLines}` : ''].join(' ')
