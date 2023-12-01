@@ -1,5 +1,5 @@
-import type {FC, DetailedHTMLProps, InputHTMLAttributes} from 'react'
-import { forwardRef } from 'react'
+import type {DetailedHTMLProps, InputHTMLAttributes} from 'react'
+import {forwardRef} from 'react'
 
 export type ReactInputProps = DetailedHTMLProps<
     InputHTMLAttributes<HTMLInputElement>,

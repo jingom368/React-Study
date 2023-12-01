@@ -108,9 +108,9 @@ import './App.css'
 
 // 5-2.
 import {Provider as ReduxProvider} from 'react-redux'
-import { useStore } from './store'
-import ClockTest from './pages/5-2. ClockTest'
-import CounterTest from './pages/5-2. CounterTest'
+import {useStore} from './store'
+import ClockTest from './pages/5-2. e_ClockTest'
+import CounterTest from './pages/5-2. e_CounterTest'
 import RemoteUserTest from './pages/5-2. RemoteUserTest'
 import CardsTest from './pages/5-2. CardsTest'
 
@@ -739,7 +739,7 @@ export default function App() {
 
             {/* useSelector 선언문
                 export function useSelector<TState, TSelected> (
-                    selector: (state: TSSate) => TSelected
+                    selector: (state: TState) => TSelected
                 ): TSelected;
             */}
             {/* TState는 Redux Store의 상태(state) 타입을 의미합니다. TSelected는 선택된 상태의 타입을 의미합니다.
@@ -846,7 +846,9 @@ export default function App() {
             <ReduxClock /> */}
 
             {/* <div /> */}
-            {/* 5-2. 리듀서 활용하기 */}
+            {/* 5-2. 리듀서 활용하기 type, dispatch(action) => reducer(state, action), 
+                useSelector<AppState, C.State>({AppState} => C.State) 
+                '@이름/' 접두사와 payload라는 변수 이름을 사용하는 이유 알기 */}
             {/* react-redux 패키지가 버전 8이 되면서 리액트 버전 18에서는 ReduxProvider에 반드시 1개 이상의
                 자식 요소를 가져야 합니다. 따라서 <div /> 요소를 추가했습니다. */}
 
@@ -901,6 +903,112 @@ export default function App() {
                 즉, ReducersMapObject는 주어진 상태의 각 키에 대응하는 리듀서 함수를 가진 객체의 타입을 나타냅니다. 
                 이 리듀서 함수는 해당 키의 상태와 액션을 받아 새로운 상태를 반환합니다. 
                 이를 통해 각각의 리듀서가 상태의 특정 부분을 관리하도록 할 수 있습니다.
+
+                예를 들어, { user: userReducer, posts: postsReducer }와 같은 형태의 리듀서 객체가 있다면, 
+                userReducer는 'user' 상태를, postsReducer는 'posts' 상태를 각각 관리하게 됩니다.
+            */}
+
+            {/* '@이름/' 접두사와 payload라는 변수 이름을 사용하는 이유 알기 */}
+            {/* 앞서 알아보았듯이 combineReducers()는 여러 개의 리듀서를 하나로 결합해 주는 함수입니다.
+                그런데 이 리듀서에 @clock/setClock이나 @counter/setCounter 타입의 액션이 유입되면,
+                특정 리듀서뿐만 아니라 combineReducers()가 결합한 모든 리듀서에 액션이 전송됩니다. */}
+            {/* 즉, @clock/setClock 액션은 clock/reducers.ts 파일에 구현된 리듀서뿐만 아니라, 
+                counter/reducers.ts 파일에 구현된 리듀서에도 전송됩니다. 
+                즉, 앱에 구현된 아무 리듀서에나 다음처럼 console.log 코드로 출력해 보면 앱에서 
+                dispatch 함수로 전송되는 모든 액션을 콘솔 창에서 확인해 볼 수 있습니다. */}
+            {/* export const reducer = (state: T.State = initialState, action: T.Actions) => {
+                console.log(action) // 모든 액션이 유입
+            } */}
+            {/* 따라서 액션 타입을 평범하게 setClock, setCounter 등 접두사가 없는 이름으로 지으면 type 값이 겹칠수 있으며, 
+                의도하지 않은 리듀서가 자신의 것이 아닌 액션을 처리하다가 오류가 발생할 수 있습니다.
+                이런 이름 충돌을 방지하는 효과적인 방법이 @이름/접두사를 type 이름 앞에 붙이는 것입니다.
+                그러면 액션의 행선지가 분명해져서 이름 충돌이 발생하는 코드를 미연에 방지할 수도 있고 가독성도 좋아집니다. */}
+            {/* 그리고 payload라는 이름을 사용한 이유는 규모가 큰 앱을 개발하다 보면 
+                AppState를 구성하는 멤버 상태의 타입들이 수시로 변하기 때문입니다. 
+                즉, 개발 초기에는 Date, number 등의 단순한 타입이었지만, 개발 후반에는 다른 속성들이 추가되어 
+                좀 더 복잡한 상태로 변경될 수 있습니다.
+                
+                이럴 때 상태의 이름을 clock, operand 등으로 지으면, 나중에 clock.clock, operand.operand처럼 의미가 이상한 이름이 됩니다.
+                반면에 payload는 payload.clock, payload,operand처럼 훨씬 더 자연스러운 이름이 됩니다.*/}
+            
+            {/* 리듀서는 순수 함수여야 한다. */}
+            {/* 리덕스는 리덕스 저장소에 저장된 과거 상태와 리듀서 함수가 반환하는 현재 상태를 
+                if(과거_상태!== 현재_상태) 방식으로 비교합니다.
+                그런데 04장에서 알아보았듯이 이런 형태의 비교가 가능하려면 리듀서 함수 내부에서 현재 상태는 
+                과거 상태를 깊은 복사해야 하며, 이 때문에 리덕스이 리듀스는 반드시 순수 함수여야 합니다.
+                
+                함수형 언어 분야에서 순수 함수(pure function)는 다음 요건을 만족해야 합니다.
+                만약 다음 요건을 만족하지 않으면 불순 함수(impure function)라고 하며,
+                다음 요건을 만족하지 않는 경우를 부작용(side-effect)이라고 합니다. */}
+            {/* 
+                - 함수 몸통에서 입력 매개변수의 값을 변경하지 않는다.(즉, 입력 매개변수는 상수나 읽기 전용으로만 사용한다.)
+                - 함수는 함수 몸통에서 만들어진 결과를 즉시 반영한다.
+                - 함수 내부에 전역 변수(global variable)나 정적 변수(static variable)를 사용하지 않는다.
+                - 함수가 예외(exception)를 발생시키지 않는다.
+                - 함수가 콜백 함수 형태로 구현되어 있거나, 함수 몸통에 콜백 함수를 사용하는 코드가 없다.
+                - 함수 몸통에 Promise처럼 비동기(asynchronous) 방식으로 동작하는 코드가 없다.
+            */}
+            {/* 예를 들어 다음 add() 함수는 add(1, 2)처럼 호출할 때 항상 3을 반환하므로 순수 함수입니다. */}
+            {/* const add = (a: number, b: number) => a + b */}
+            {/* 여기서 리덕스 리듀스를 구현할 때 가장 흔히 하는 실수는 입력 매개변숫값을 변경하는 것입니다.
+            */}
+
+            {/* 
+                // 예를 들어 다음처럼 리듀서를 구현한 코드에서 매개변수 state 값을 변경하므로 이 리듀서는 불순 함수가 됩니다.
+                - 불순 함수 예 1)
+                const impureReducer = (state, action) => {
+                    state += action.payload
+                    return state
+                }
+
+                // 반면에 다음 코드는 입력 매개변수 state의 값을 유지하므로 리듀서를 정상으로 구현한 예입니다.
+                - 순수 함수 예 1)
+                const puerReducer = (state, action) => {
+                    return state + action.payload
+                }
+
+                다음 리듀서는 입력 매개변수 state 값을 변경하므로 리듀서를 불순 함수로 만드는 또 다른 예입니다.
+                - 불순 함수 예 2)
+                const impureReducer2 = (state, action) => {
+                    state.name = 'Jack'
+                    return state
+                }
+
+                // 반면에 다음 리듀서는 전개 연산자로 과거 state를 깊은 복사하여 새로운 state 객체를 만들고,
+                    이 새로운 state 객체의 name 속성만 바꾸므로 정상으로 구현한 예입니다.
+                - 순수 함수 예 2)
+                const pureReducer2 = (state, action) => {
+                    return { ...state, name: 'Jack' }
+                }
+
+                다음 리듀서는 입력 매개변수 state의 값을 변경하므로 리듀서를 불순 함수로 만드는 또 다른 예입니다.
+                - 불순 함수 예 3)
+                const impureReducer3 = (state, action) => {
+                    state.push({name: 'Jack', age: 32})
+                    return state
+                }
+
+                // 반면에 다음 리듀서는 전개 연산자로 과거 state를 깊은 복사하여 새로운 state 배열을 만들고,
+                    이 새로운 state 배열 객체에 새 아이템을 추가하므로 정상으로 구현한 예입니다<div className=""></div>
+                - 순수 함수 예 3)
+                const pureReducer3 = (state, action) => {
+                    return [ ...state, {name: 'Jack', age: 32} ]
+                }
+
+                다음 리듀서는 입력 매개변수 state의 값을 변경하므로 리듀서를 불순 함수로 만드는 예입니다.
+                - 불순 함수 예 4)
+                const impureReducer4 = (state, action) => {
+                    const index = 0
+                    state.splice(index, 1)
+                    return state
+                }
+
+                // 반면에 다음 리듀서는 배열의 filter() 메서드를 사용하여 index값이 0인 아이템을 제거한 
+                    새로운 배열을 반환하므로 정상으로 구현한 예입니다.
+                - 순수 함수 예 4)
+                const pureReducer4 = (state, action) => {
+                    return state.filter((item, index) => index != 0)
+                }
             */}
             <CardsTest />
             <RemoteUserTest />

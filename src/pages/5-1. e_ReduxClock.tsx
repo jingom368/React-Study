@@ -254,6 +254,8 @@ export default function ReduxClock() {
 
 /* 
 1. 상태와 액션 타입 정의
+     코드가 시작되면서 먼저 AppState와 SetTodayAction이라는 타입들이 정의됩니다.
+     AppState는 우리가 관리하려는 상태의 모양을 나타내고, SetTodayAction은 '오늘의 날짜'를 설정하는 액션의 타입을 나타냅니다.
 - AppState, SetTodayAction 타입이 정의되는 부분입니다.
     export type SetTodayAction = Action<'setToday'> & {
         today: Date
@@ -261,8 +263,10 @@ export default function ReduxClock() {
     export type AppState = {
         today: Date
     }
+
 2. 스토어 생성
-- configureStore 함수가 호출되어 스토어가 생성되는 부분입니다.
+     configureStore 함수를 통해 Redux 스토어가 생성됩니다. 여기서 스토어는 애플리케이션의 상태를 저장하고 관리하는 중요한 객체입니다.
+     스토어는 rootReducer를 사용하여 액션에 따라 상태를 변경합니다.
     const initializeStore = () => {
         const store = configureStore({reducer: rootReducer, middleware: []})
         return store
@@ -271,12 +275,18 @@ export default function ReduxClock() {
         const store = useMemo(() => initializeStore(), [])
         return store
     }
+
 3. 초기 상태 설정
-- 초기 상태 initialAppState가 설정되는 부분입니다.
+     rootReducer에서 초기 상태 initialAppState가 설정됩니다. 이 초기 상태는 'today' 속성을 가지며,
+     이 속성의 값은 코드가 실행되는 시점의 날짜와 시간입니다.
     const initialAppstate = {
         today: new Date()
     }
+
 4. 리듀서 정의
+     rootReducer는 액션의 타입에 따라 상태를 어떻게 변경할지를 정의합니다.
+     여기서는 'setToday' 액션에 대한 처리가 정의되어 있습니다. 'setToday' 액션을 받으면,
+     'today' 상태를 액션의 'today' 속성 값으로 갱신합니다.
 - rootReducer에서 'setToday' 액션에 대한 처리가 정의되는 부분입니다.
     export const rootReducer = (state: AppState = initialAppstate, action: Actions) => {
         switch (action.type) {
@@ -286,8 +296,9 @@ export default function ReduxClock() {
         }
         return state
     }
+
 5. 컴포넌트 렌더링
-- ReduxClock 컴포넌트에서 'today' 상태를 가져와 화면에 표시하는 부분입니다.
+     ReduxClock 컴포넌트가 렌더링됩니다. 이 컴포넌트는 useSelector 훅을 사용하여 'today' 상태를 가져와 화면에 표시합니다.
     const today = useSelector<AppState, Date>(state => state.today)
     return (
         <Div className="flex flex-col items-center justify-center mt-16">
@@ -296,16 +307,25 @@ export default function ReduxClock() {
             <Subtitle className="mt-4 text-2xl">{today.toLocaleDateString()}</Subtitle>
         </Div>
     )
+
 6. 액션 디스패치
+     ReduxClock 컴포넌트는 useInterval 훅을 통해 일정 시간 간격으로 'setToday' 액션을 디스패치합니다.
+     이 액션은 useDispatch 훅을 통해 디스패치되며, 디스패치된 액션은 스토어에 전달됩니다.
 - ReduxClock 컴포넌트에서 'setToday' 액션을 디스패치하는 부분입니다.
     const dispatch = useDispatch()
     useInterval(() => {
         dispatch({type: 'setToday', today: new Date()})
     })
+    
 7. 상태 업데이트
+     스토어는 디스패치된 액션을 받아 rootReducer를 실행합니다.
+     rootReducer는 'setToday' 액션을 처리하고, 이에 따라 'today' 상태를 갱신합니다.
 - rootReducer에서 'setToday' 액션을 처리하고, 상태를 갱신하는 부분입니다. 이 부분은 코드상에는 명시적으로 보이지 않지만, 
     디스패치된 액션에 따라 rootReducer가 호출되고 상태가 업데이트되는 과정이 진행됩니다.
+
 8. 컴포넌트 리렌더링
+     상태가 변경되면, 해당 상태를 사용하는 ReduxClock 컴포넌트가 다시 렌더링됩니다.
+     컴포넌트는 갱신된 'today' 상태를 가져와 화면에 표시합니다.
 - 상태가 변경되면, ReduxClock 컴포넌트가 다시 렌더링되는 부분입니다. 이 부분도 코드상에는 명시적으로 보이지 않지만, 
     상태가 변경되면 React는 해당 컴포넌트를 리렌더링합니다.
 
