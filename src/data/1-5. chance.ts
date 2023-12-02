@@ -1,5 +1,5 @@
 import Chance from 'chance'
-import {couldStartTrivia} from 'typescript'
+
 const chance = new Chance()
 
 export const randomUUID = () => chance.guid()

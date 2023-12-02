@@ -1,12 +1,12 @@
-import {AppState} from '../store'
+import type {AppState2} from '../store'
 import {useSelector, useDispatch} from 'react-redux'
 import {Title} from '../components'
 import {useInterval} from '../hooks'
-import * as C from '../store/clock'
+import * as C from '../store/5-2. clock'
 
 export default function ReduxClock() {
     // const today = useSelector<AppState, Date>(state => state.today)
-    const clock = useSelector<AppState, C.State>(state => state.clock)
+    const clock = useSelector<AppState2, C.State>(state => state.clock)
     const dispatch = useDispatch()
 
     // useInterval(() => {dispatch({type: 'setToday', today: new Date()})})

@@ -1,3 +1,3 @@
-export type AppState_b = {
+export type AppState1 = {
     today: Date
 }

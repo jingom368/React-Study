@@ -1,14 +1,14 @@
 import {useDispatch, useSelector} from 'react-redux'
-import type {AppState} from '../store'
+import type {AppState2} from '../store'
 import {useCallback} from 'react'
 import {Icon} from '../theme/daisyui'
 import {Subtitle, Title} from '../components'
-import * as C from '../store/counter'
+import * as C from '../store/5-2. counter'
 
 export default function CounterTest() {
     const dispatch = useDispatch()
 
-    const counter = useSelector<AppState, C.State>(({counter}) => counter)
+    const counter = useSelector<AppState2, C.State>(({counter}) => counter)
     const increase = useCallback(() => dispatch(C.increaseCounter()), [dispatch])
     const decrease = useCallback(() => dispatch(C.decreaseCounter()), [dispatch])
 

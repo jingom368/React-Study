@@ -10,7 +10,7 @@ const initializeStore = () => {
     return store
 }
 
-export function useStore() {
+export function useStore2() {
     const store = useMemo(() => initializeStore(), [])
     return store
 }

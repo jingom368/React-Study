@@ -96,7 +96,7 @@ import './App.css'
 // import ReduxClock from './pages/5-1. e_ReduxClock'
 // import UseReducerClock from './pages/5-1. UseReducerClock'
 // import {Provider as ReduxProvider} from 'react-redux'
-// import {useStore_b} from './store'
+// import {useStore1} from './store'
 // import type {Action} from 'redux'
 // import { configureStore } from '@reduxjs/toolkit'
 
@@ -107,12 +107,20 @@ import './App.css'
 // const store = configureStore({reducer: rootReducer, middleware: []})
 
 // 5-2.
+// import {Provider as ReduxProvider} from 'react-redux'
+// import {useStore2} from './store'
+// import ClockTest from './pages/5-2. e_ClockTest'
+// import CounterTest from './pages/5-2. e_CounterTest'
+// import RemoteUserTest from './pages/5-2. e_RemoteUserTest'
+// import CardsTest from './pages/5-2. CardsTest'
+
+// 5-3.
 import {Provider as ReduxProvider} from 'react-redux'
 import {useStore} from './store'
-import ClockTest from './pages/5-2. e_ClockTest'
-import CounterTest from './pages/5-2. e_CounterTest'
-import RemoteUserTest from './pages/5-2. RemoteUserTest'
-import CardsTest from './pages/5-2. CardsTest'
+// import LoggerTest from './pages/5-3. e_LoggerTest'
+// import LoadingTest from './pages/5-3. e_LoadingTest'
+// import ErrorMessageTest from './pages/5-3. e_ErrorMessageTest'
+// import FetchTest from './pages/5-3. e_FetchTest'
 
 // prettier-ignore
 export default function App() {
@@ -133,10 +141,15 @@ export default function App() {
     // const today = useClock()
 
     // 5-1.
-    // const store = useStore_b()
+    // const store = useStore1()
     
     // 5-2.
+    // const store = useStore2()
+
+    // 5-3.
     const store = useStore()
+
+    // 5-4.
 
     return (
         // 4-6.
@@ -144,7 +157,7 @@ export default function App() {
         // <ReduxProvider store={store}>
         // <main>
         
-        // 5-2.
+        // 5-2. 5-3. 5-4.
         <ReduxProvider store = {store}> 
         {/* <main className='p-8'> */}
 
@@ -848,7 +861,8 @@ export default function App() {
             {/* <div /> */}
             {/* 5-2. 리듀서 활용하기 type, dispatch(action) => reducer(state, action), 
                 useSelector<AppState, C.State>({AppState} => C.State) 
-                '@이름/' 접두사와 payload라는 변수 이름을 사용하는 이유 알기 */}
+                '@이름/' 접두사와 payload라는 변수 이름을 사용하는 이유 알기 
+                리듀서는 순수 함수여야 한다.*/}
             {/* react-redux 패키지가 버전 8이 되면서 리액트 버전 18에서는 ReduxProvider에 반드시 1개 이상의
                 자식 요소를 가져야 합니다. 따라서 <div /> 요소를 추가했습니다. */}
 
@@ -1010,12 +1024,198 @@ export default function App() {
                     return state.filter((item, index) => index != 0)
                 }
             */}
-            <CardsTest />
+            {/* <CardsTest />
             <RemoteUserTest />
             <CounterTest />
-            <ClockTest />
-            
+            <ClockTest /> */}
+
+            {/* 5-3. 리덕스 미들웨어 이해하기 */}
+            {/* 리덕스 미들웨어란? 앞 절에서 알아본 것처럼 리듀서 함수 몸통에서는 
+                부작용(side effect)을 일으키는 코드를 사용할 수 없습니다. 
+                그런데 이 점은 앞서 구현한 RemoteUserTest 컴포넌트처럼 리덕스 기능을 사용하는 컴포넌트를 복잡하게 만듭니다. */}
+            {/* 다음 그림처럼 보듯 리덕스 미들웨어는 리듀서 앞 단에서 부작용이 있는 코드들을 실행하여 얻은 결과를
+                리듀서 쪽으로 넘겨주는 역할을 합니다. */}
+            {/* dispatch(액션) --> 미들웨어 --> 리듀서 --> 리덕스 저장소 */}
+
+            {/* 리덕스 미들웨어는 다음 형태의 2차 고차 함수입니다. */}
+            {/* 리덕스 미들웨어
+                import {Action, Dispatch} from 'redux'
+                
+                export function someMiddleware<S = any>({dispatch: Dispatch, getState}: {getState: () => S}) {
+                    return (next: Dispatch) => (action: Action) => {
+                        const returnValue = next(action)
+                        return returnValue
+                    }
+                }
+            */}
+            {/* 네, 이 코드는 Redux의 미들웨어를 정의하는 코드입니다. 
+                미들웨어는 액션을 디스패치하면서 그 과정에 개입하여 추가적인 작업을 수행할 수 있게 해주는 기능입니다.
+
+                someMiddleware 함수는 미들웨어를 생성하는 함수입니다. 
+                이 함수는 dispatch와 getState 두 가지 파라미터를 객체 형태로 받습니다.
+
+                dispatch: 액션을 디스패치하는 함수입니다.
+                getState: 현재 스토어의 상태를 가져오는 함수입니다.
+                someMiddleware 함수는 다시 함수를 반환하는 높은 차수의 함수(higher-order function)입니다. 
+                이렇게 반환된 함수는 next라는 파라미터를 받습니다.
+
+                next: 다음 미들웨어에 액션을 전달하는 함수입니다. 만약 다음 미들웨어가 없다면 리듀서에 액션을 전달합니다.
+                이렇게 반환된 함수는 또 다시 함수를 반환하는데, 이 함수는 action이라는 파라미터를 받습니다.
+
+                action: 디스패치된 액션 객체입니다.
+                이렇게 반환된 마지막 함수 내부에서는 next(action)을 호출하여 액션을 다음 미들웨어 혹은 리듀서로 전달합니다. 
+                그리고 그 결과를 returnValue에 저장하여 반환합니다.
+                현재 이 someMiddleware는 액션을 디스패치하는 과정에 별도로 개입하는 로직이 없는 상태입니다. 
+                대신 미들웨어의 기본 틀을 갖추고 있어, 필요한 로직을 추가하면 됩니다.
+
+                예를 들어 특정 액션에 대해 추가적인 로그를 남기거나, 비동기 작업을 수행하거나, 
+                액션을 조건에 따라 취소하는 등의 작업을 수행할 수 있습니다.
+
+                이해가 되셨나요? 혹시 추가로 궁금하신 점이 있으시다면 언제든지 말씀해주세요.
+             */}
+
+            {/* 여기서 Dispatch는 다음처럼 선언된 타입으로 useDispatch 훅으로 얻을 수 있는 dispatch() 함수의 타입과 같습니다. */}
+            {/* Dispatch 타입 
+                export interface Dispatch<A extends Action = AnyAction> {
+                    <T extends A>(action: T): T
+                }
+            */}
+            {/* 
+                이 코드는 TypeScript를 사용하여 Redux의 Dispatch 인터페이스를 정의하고 있습니다. 
+                Dispatch는 액션을 디스패치하는 함수의 타입을 설명합니다.
+
+                Dispatch<A extends Action = AnyAction>에서 A extends Action = AnyAction 부분은 
+                Dispatch가 처리할 수 있는 액션의 타입을 의미합니다. 
+                이 타입 A는 Action의 서브타입이어야 하며, 기본값으로 AnyAction을 가집니다. 
+                AnyAction은 모든 가능한 액션 타입을 포함하는 Redux의 내장 타입입니다.
+
+                <T extends A>(action: T): T 이 부분은 Dispatch 함수의 시그니처를 정의합니다. 
+                이 함수는 T 타입의 action을 인자로 받고, T 타입의 값을 반환합니다. 
+                여기서 T는 A 타입, 즉 Action의 서브타입을 상속받는 타입입니다.
+
+                즉, 이 Dispatch 인터페이스는 "액션 타입 A의 서브타입인 T 타입의 액션을 인자로 받아 
+                T 타입의 결과를 반환하는 함수"를 의미합니다.
+
+                이렇게 정의된 Dispatch 인터페이스를 사용하면, 액션을 디스패치하는 함수의 타입을 보다 명시적으로 표현할 수 있습니다. 
+                따라서 TypeScript의 타입 체킹 기능을 활용하여 디스패치 함수의 사용에 대한 안정성을 높일 수 있습니다.
+            */}
+
+            {/* 그리고 리덕스 미들웨어는 항상 다음처럼 action을 매개변수로 받는 함수를 반환해야 합니다. */}
+            {/* 액션을 매개변수로 받는 함수 반환
+                (dispatch: Dispatch) => (action: Action) => {} 
+            */}
+            {/* 이 코드는 고차 함수(higher-order function)를 사용하여 Redux 미들웨어의 일반적인 패턴을 나타냅니다.
+                
+                (dispatch: Dispatch) => (action: Action) => {} 이 함수는 먼저 dispatch를 인자로 받는 함수를 반환하며, 
+                이 반환된 함수는 다시 action을 인자로 받는 함수를 반환합니다.
+                
+                (dispatch: Dispatch) => ...: 이 부분은 dispatch라는 인자를 받는 함수를 정의합니다. 
+                dispatch는 Redux의 Dispatch 타입으로, 액션을 디스패치하는 함수입니다.
+                
+                (action: Action) => {}: 이 부분은 action이라는 인자를 받는 함수를 정의합니다. 
+                action은 Redux의 Action 타입으로, 디스패치된 액션 객체입니다.
+
+                즉, 이 함수는 dispatch를 인자로 받아서, 그 결과로 action을 인자로 받는 새로운 함수를 반환합니다. 
+                이러한 패턴은 미들웨어에서 자주 사용되며, 이를 통해 미들웨어는 디스패치 과정에 개입하여 추가적인 작업을 수행할 수 있습니다.
+
+                각각의 함수가 어떤 작업을 수행하는지는 {} 부분에 작성되는 코드에 따라 달라집니다. 
+                현재는 {} 부분이 비어 있으므로, 아무런 추가 작업을 수행하지 않습니다. 
+                필요한 로직을 추가하여 미들웨어의 기능을 구현할 수 있습니다. 
+            */}
+
+            {/* 그런데 만일 미들웨어가 아무런 일도 안 한다면, 리덕스 저장소로 유입되는 모든 액션이 저장소로 유입되지 못하므로,
+                리덕스는 자신의 기능을 정상으로 수행할 수 없습니다.
+                따라서 미들웨어는 다음 코드처럼 next의 반환값을 다시 반환해 다른 미들웨어도 함께 동작할 수 있게 해야 합니다.
+                결국 미들웨어를 사용하는 기본형태는 다음과 같습니다. */}
+            {/* 미들웨어 기본 형태
+                (next: Dispatch) => (action: Action) => {
+                    return next(action)
+                }
+            */}
+            {/* 이 코드도 Redux 미들웨어의 일반적인 패턴을 나타내는 고차 함수(higher-order function)입니다.
+
+                (next: Dispatch) => ...: 이 부분은 next라는 인자를 받는 함수를 정의합니다. next는 Redux의 Dispatch 타입으로, 
+                다음 미들웨어에 액션을 전달하는 함수입니다. 만약 더이상 처리할 미들웨어가 없다면, next는 리듀서에 액션을 전달합니다.
+                (action: Action) => ...: 이 부분은 action이라는 인자를 받는 함수를 정의합니다. 
+                action은 Redux의 Action 타입으로, 디스패치된 액션 객체입니다.
+                
+                이 함수는 next를 인자로 받아서, 그 결과로 action을 인자로 받는 새로운 함수를 반환합니다. 
+                이런 패턴은 미들웨어에서 자주 사용되며, 이를 통해 미들웨어는 액션의 디스패치 과정에 개입하여 
+                추가적인 작업을 수행할 수 있습니다.
+
+                (action: Action) => { return next(action) }: 이 부분은 action을 받아서 next(action)을 호출하는 함수를 정의합니다. 
+                즉, 받은 액션을 그대로 다음 미들웨어 혹은 리듀서로 전달합니다.
+
+                따라서 이 코드는 "액션을 받아서 그대로 다음 단계로 전달하는" 미들웨어의 기본 틀을 나타냅니다. 
+                이 틀 위에 필요한 로직을 추가하여 미들웨어의 기능을 구현할 수 있습니다.
+            */}
+
+            {/* 썽크 미들웨어 알아보기 */}
+            {/* 앞서 리덕스 미들웨어가 2차 고차 함수라고 설명한 적이 있는데, 썽크는 다음처럼 action의
+                타입이 함수면 acton을 함수로서 호출해 주는 기능을 추가한 미들웨어입니다. */}
+            {/* 
+                import {Action, Dispatch} from 'redux'
+                
+                export function someMiddleware<S = any>({dispatch: Dispatch, getState}: {getState: () => S}) {
+                    return (next: Dispatch) => (action: Action) => {
+                        if (typeof action === 'function')
+                            return action(dispatch, getState)
+                        return next(action)
+                        //  const returnValue = next(action)
+                        //  return returnValue
+                    }
+                }
+            */}
+            {/* 이 코드는 Redux 미들웨어인 someMiddleware를 정의하는 코드입니다. 
+                이 미들웨어는 액션을 디스패치하는 과정에서 특정 조건에 따라 다른 작업을 수행하도록 합니다.
+
+                export function someMiddleware<S = any>({dispatch: Dispatch, getState}: 
+                {getState: () => S}) {...}: someMiddleware 함수를 정의하고, 외부로 공개합니다. 
+                이 함수의 인자는 dispatch 함수와 getState 함수를 포함하는 객체입니다. 
+                dispatch는 액션을 디스패치하는 함수이며, getState는 현재 스토어의 상태를 가져오는 함수입니다.
+
+                return (next: Dispatch) => ...: someMiddleware 함수는 함수를 반환합니다. 
+                이 반환된 함수는 next라는 인자를 받습니다. next는 다음 미들웨어에 액션을 전달하는 함수입니다. 
+                만약 다음 미들웨어가 없다면, next는 리듀서에 액션을 전달합니다.
+
+                (action: Action) => {...}: next를 인자로 받는 함수는 다시 함수를 반환합니다. 
+                이 반환된 함수는 action이라는 인자를 받습니다. action은 디스패치된 액션 객체입니다.
+
+                이제 이 함수 내부에서 실제 작업을 수행합니다.
+                if (typeof action === 'function') return action(dispatch, getState): 디스패치된 액션이 함수라면, 
+                이 함수를 호출하고 그 결과를 반환합니다. 이 때, dispatch와 getState를 인자로 전달합니다. 
+                이는 thunk 패턴을 구현한 것으로, 액션 생성자가 비동기 작업을 수행하거나, 
+                현재 스토어 상태에 따라 다른 액션을 디스패치해야 할 경우에 유용합니다.
+
+                return next(action): 디스패치된 액션이 함수가 아니라면, next(action)을 호출하여 
+                액션을 다음 미들웨어 혹은 리듀서로 전달하고 그 결과를 반환합니다.
+                따라서, 이 someMiddleware 미들웨어는 디스패치된 액션이 함수인 경우와 그렇지 않은 경우에 따라 다른 작업을 수행합니다.
+            */}
+
+            {/* 이에 따라 썽크 미들웨어를 장착하면 다음처럼 dispatch 함수를 매개변수로 수신하는 함수 형태로
+                액션 생성기를 만들 수 있습니다. */}
+            {/* const function Action = (dispatch: Dispatch) => {
+                dispatch(someAction)
+            } */}
+            {/* 앞 절에서 알아본 바와 같이 리듀서는 순수 함수여야 하지만 리덕스 미들웨어는 순수 함수일 필요가 없습니다.
+                사실상 미들웨어는 부작용이 있는 코드를 마치 리듀서에서 동작하는 것처럼 만들어 주는 역할을 합니다.
+                loading 멤버 상태를 구현하면서 이 의미를 알아보겠습니다. */}
+            {/* <FetchTest />
+            <ErrorMessageTest />
+            <LoadingTest />
+            <LoggerTest /> */}
+
+            {/* 5-4.  */}
+            {/* 지금까지 배운 내용을 토대로 아틀라시안 사가 공급하는 트렐로 처럼 동작하는 앱을 만들어 보겠습니다.
+                트렐로는 많은 개발자가 사용하는 웹 기반의 프로젝트 관리 소프트웨어로서, 드래그 앤 드롭 방식의
+                칸반 보드를 기반으로 동작합니다. */}
+            {/* 칸반 보드란? */}
+            {/* 칸반은 '시각 신호'를 뜻하는 일본어로서 도요타 자동차 창업주가 처음 고안했습니다.
+                칸반 보드는 작업을 시각적으로 표시해 주어 프로젝트 관리를 쉽게 할 수 있도록 돕습니다. 
+                카드 목록을 수직 방향으로 구성하며 각 목록이나 카드는 드래그 앤 드롭으로 소속이나 순서를 자유롭게 변경할 수 있습니다. */}
+
         {/* </main> */}
+        {/* 5-2. 5-3. 5-4. */}
         </ReduxProvider>
 
         // 5-1.

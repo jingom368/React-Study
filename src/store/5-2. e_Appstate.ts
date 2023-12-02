@@ -1,12 +1,12 @@
-import * as Clock from './clock'
-import * as Counter from './counter'
-import * as R from './remoteUser'
-import * as Cards from './cards'
+import * as Clock from './5-2. clock'
+import * as Counter from './5-2. counter'
+import * as R from './5-2. remoteUser'
+import * as Cards from './5-2. cards'
 
-export type AppState = {
+export type AppState2 = {
     clock: Clock.State
     counter: Counter.State
-    remoterUser: R.State
+    remoteUser: R.State
     cards: Cards.State
 }
 

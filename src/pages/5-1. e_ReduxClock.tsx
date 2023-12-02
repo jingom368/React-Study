@@ -1,10 +1,10 @@
-import {AppState_b} from '../store'
+import {AppState1} from '../store'
 import {useSelector, useDispatch} from 'react-redux'
 import {Div, Subtitle, Title} from '../components'
 import {useInterval} from '../hooks'
 
 export default function ReduxClock() {
-    const today = useSelector<AppState_b, Date>(state => state.today)
+    const today = useSelector<AppState1, Date>(state => state.today)
     const dispatch = useDispatch() // 추가
 
     useInterval(() => {

@@ -1,5 +1,5 @@
 import {useReducer} from 'react'
-import {AppState_b} from '../store'
+import {AppState1} from '../store'
 import {Div, Subtitle, Title} from '../components'
 import {useInterval} from '../hooks'
 import type {SetTodayAction} from '../store/5-1. e_actions'
@@ -10,7 +10,7 @@ export default function useReducerClock() {
     // const dispatch = useDispatch() // 추가
 
     const [{today}, dispatch] = useReducer(
-        (state: AppState_b, action: SetTodayAction) => {
+        (state: AppState1, action: SetTodayAction) => {
             switch (action.type) {
                 case 'setToday':
                     // return {...state, today: action.today}
