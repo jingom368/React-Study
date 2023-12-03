@@ -1,13 +1,13 @@
 import {useDispatch, useSelector} from 'react-redux'
 import * as L from '../store/5-3. loading'
-import type {AppState} from '../store'
+import type {AppState3} from '../store'
 import {useCallback} from 'react'
 import {Title} from '../components'
 import {Button} from '../theme/daisyui'
 
 export default function LoadingTest() {
     const dispatch = useDispatch()
-    const loading = useSelector<AppState, L.State>(({loading}) => loading)
+    const loading = useSelector<AppState3, L.State>(({loading}) => loading)
 
     const doTimeLoading = useCallback(() => {
         dispatch<any>(L.doTimeLoading(5000))

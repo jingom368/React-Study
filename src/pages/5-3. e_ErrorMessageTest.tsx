@@ -1,14 +1,14 @@
 import {useDispatch, useSelector} from 'react-redux'
 import * as E from '../store/5-3. errorMessage'
 import * as D from '../data'
-import type {AppState} from '../store'
+import type {AppState3} from '../store'
 import {useCallback} from 'react'
 import {Title} from '../components'
 import {Button} from '../theme/daisyui'
 
 export default function ErrorMessageTest() {
     const dispatch = useDispatch()
-    const errorMessage = useSelector<AppState, E.State>(({errorMessage}) => errorMessage)
+    const errorMessage = useSelector<AppState3, E.State>(({errorMessage}) => errorMessage)
     // const loading = useSelector<AppState, L.State>(({loading}) => loading)
 
     //const doTimeLoading = useCallback(() => {

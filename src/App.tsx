@@ -115,12 +115,19 @@ import './App.css'
 // import CardsTest from './pages/5-2. CardsTest'
 
 // 5-3.
-import {Provider as ReduxProvider} from 'react-redux'
-import {useStore} from './store'
+// import {Provider as ReduxProvider} from 'react-redux'
+// import {useStore3} from './store'
 // import LoggerTest from './pages/5-3. e_LoggerTest'
 // import LoadingTest from './pages/5-3. e_LoadingTest'
 // import ErrorMessageTest from './pages/5-3. e_ErrorMessageTest'
 // import FetchTest from './pages/5-3. e_FetchTest'
+
+// 5-4.
+import {Provider as ReduxProvider} from 'react-redux'
+import {useStore4} from './store'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import Board from './pages/5-4. Board'
 
 // prettier-ignore
 export default function App() {
@@ -147,9 +154,10 @@ export default function App() {
     // const store = useStore2()
 
     // 5-3.
-    const store = useStore()
+    // const store = useStore3()
 
     // 5-4.
+    const store = useStore4()
 
     return (
         // 4-6.
@@ -159,6 +167,7 @@ export default function App() {
         
         // 5-2. 5-3. 5-4.
         <ReduxProvider store = {store}> 
+        <DndProvider backend={HTML5Backend}>
         {/* <main className='p-8'> */}
 
             {/* 2.5 */}
@@ -1214,8 +1223,11 @@ export default function App() {
                 칸반 보드는 작업을 시각적으로 표시해 주어 프로젝트 관리를 쉽게 할 수 있도록 돕습니다. 
                 카드 목록을 수직 방향으로 구성하며 각 목록이나 카드는 드래그 앤 드롭으로 소속이나 순서를 자유롭게 변경할 수 있습니다. */}
 
+            <Board />
+
         {/* </main> */}
         {/* 5-2. 5-3. 5-4. */}
+        </ DndProvider>
         </ReduxProvider>
 
         // 5-1.

@@ -2,11 +2,11 @@ import {useCallback, useEffect} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import {Avatar, Title} from '../components'
 import {Button} from '../theme/daisyui'
-import type {AppState} from '../store'
-import * as D from '../data'
+import type {AppState3} from '../store'
 import * as F from '../store/5-3. fetchUser' // 추가
-import * as L from '../store/5-3. loading'
-import * as E from '../store/5-3. errorMessage'
+// import * as L from '../store/5-3. loading'
+// import * as E from '../store/5-3. errorMessage'
+// import * as D from '../data'
 
 export default function FetchTest() {
     const dispatch = useDispatch()
@@ -17,7 +17,7 @@ export default function FetchTest() {
         loading,
         errorMessage,
         fetchUser: user
-    } = useSelector<AppState, AppState>(state => state)
+    } = useSelector<AppState3, AppState3>(state => state)
 
     // const user = useSelector<AppState, R.State>(({remoteUser}) => remoteUser)
     // const [loading, toggleLoading] = useToggle()

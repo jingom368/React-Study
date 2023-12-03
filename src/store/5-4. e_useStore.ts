@@ -1,6 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit'
 import {useMemo} from 'react'
-import {rootReducer} from './5-3. e_rootReducer'
+import {rootReducer} from './5-4. e_rootReducer'
 // import logger from './5-3. e_logger'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
@@ -20,7 +20,7 @@ const initializeStore = () => {
     return store
 }
 
-export function useStore3() {
+export function useStore4() {
     const store = useMemo(() => initializeStore(), [])
     return store
 }
