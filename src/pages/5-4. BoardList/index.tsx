@@ -1,14 +1,14 @@
 import type {FC} from 'react'
 import type {List} from '../../store/5-4. e_commonTypes'
-import type { MoveFunc } from '../../components' // 추가 2 
+import type {MoveFunc} from '../../components' // 추가 2
 
 import {useMemo} from 'react' // 추가
 import {Div} from '../../components' // 추가
+import {CardDroppable} from '../../components' // 추가 3
 import {Icon} from '../../theme/daisyui'
-import { ListDraggable } from '../../components' // 추가 2
+import {ListDraggable} from '../../components' // 추가 2
 import ListCard from '../5-4. ListCard' // 추가
 import {useCards} from '../../store/5-4. e_useCards' // 추가
-
 
 export type BoardListProps = {
     list: List
@@ -17,12 +17,12 @@ export type BoardListProps = {
     onMoveList: MoveFunc // 추가 2
 }
 const BoardList: FC<BoardListProps> = ({
-    list, 
-    onRemoveList, 
+    list,
+    onRemoveList,
     index, // 추가 2
     onMoveList, // 추가 2
     ...props
-    }) => {
+}) => {
     const {cards, onPrependCard, onAppendCard, onRemoveCard} = useCards(list.uuid)
 
     const children = useMemo(
@@ -32,6 +32,8 @@ const BoardList: FC<BoardListProps> = ({
                     key={card.uuid}
                     card={card}
                     onRemove={onRemoveCard(card.uuid)}
+                    draggableId={card.uuid} // 추가 3
+                    index={index} // 추가 3
                 />
             )),
         [cards, onRemoveCard]
@@ -49,7 +51,11 @@ const BoardList: FC<BoardListProps> = ({
                     </p>
                 </div>
                 <div className="flex justify-between ml-2">
-                    <Icon name="remove" className="btn-error btn-xs" onClick={onRemoveList} />
+                    <Icon
+                        name="remove"
+                        className="btn-error btn-xs"
+                        onClick={onRemoveList}
+                    />
                     <div className="flex">
                         <Icon
                             name="post_add"
@@ -63,7 +69,8 @@ const BoardList: FC<BoardListProps> = ({
                         />
                     </div>
                 </div>
-                <div className="flex flex-col p-2">{children}</div>
+                {/* <div className="flex flex-col p-2">{children}</div> 삭제3 */}
+                <CardDroppable droppableId={list.uuid}>{children}</CardDroppable> 추가 3
             </Div>
         </ListDraggable>
     )
@@ -105,3 +112,5 @@ const lists = useSelector<AppState, List[]>(({listidOrders, listEntities}) =>
 
 // 다음은 src/pages/BoardList/index.tsx 파일에 ListDraggable 컴포넌트를 반영한 것으로,
 // ListDraggable이 요구하는 index와 onMoveList 함수를 Board로부터 받기 위해 이 2개의 속성을 추가로 설정하고 있습니다.
+
+// 이제 다음처럼 BoardList 컴포넌트에 CardDroppable 컴포넌트를 적용합니다.

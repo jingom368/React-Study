@@ -85,3 +85,20 @@ for i in range(6,n+1):
     sugar[i] = min(sugar[i-3], sugar[i-5]) + 1
 
 print(sugar[n] if sugar[n]<5001 else -1)
+
+
+
+
+# 입력
+N = int("5")
+A = list(map(int, "6 3 2 10 -10".split()))
+M = int("8")
+arr = list(map(int, "10 9 -5 2 3 4 5 -10".split()))
+
+dict1 = dict.fromkeys(A)
+
+for i in arr:
+    if i in dict.fromkeys(A):
+        print(1, end=' ')
+    else:
+        print(0, end=' ')
