@@ -11,5 +11,5 @@
    6) 리액트 라우터를 통해 프로젝트 구조 설계 능력 향상
    7) Express 프레임워크와 MongoDB를 활용한 API 서버 구축 경험
      
-     - 트렐로를 모방한 프로젝트를 통해 Action, dispatch, store, reducer를 활용하는 redux에 대한 전반적인 이해와 복잡한 이중 배열의 CRUD 구현 경험
-     - 기존 프로젝트의 useContext를 Redux Flux 패턴으로 변경하기 위한 추가적인 독학을 진행
+- 트렐로를 모방한 프로젝트를 통해 Action, dispatch, store, reducer를 활용하는 redux에 대한 전반적인 이해와 복잡한 이중 배열의 CRUD 구현 경험
+- 기존 프로젝트의 useContext를 Redux Flux 패턴으로 변경하기 위한 추가적인 독학을 진행
