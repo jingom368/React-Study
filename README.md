@@ -14,4 +14,4 @@
 - 트렐로를 모방한 프로젝트를 통해 Action, dispatch, store, reducer를 활용하는 redux에 대한 전반적인 이해와 복잡한 이중 배열의 CRUD 구현 경험
 - 기존 프로젝트의 useContext를 Redux Flux 패턴으로 변경하기 위한 추가적인 독학을 진행
 
-<div><img src="https://github.com/jingom368/React-Study/assets/67932739/eb4455dd-d8b5-448f-9d4a-9c6b2ca04ca5" ></div>
+<div><img src="https://github.com/jingom368/React-Study/assets/67932739/41cfab3c-8507-4505-a5c4-c07efa079c67" ></div>
