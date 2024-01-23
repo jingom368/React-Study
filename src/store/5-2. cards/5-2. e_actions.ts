@@ -9,8 +9,8 @@ export const removeCard = (payload: string): T.RemoveCardAction => ({
     type: '@cards/removeCard',
     payload
 })
-
 // 그리고 src/store/cards 디렉터리의 actions.ts 파일에는 배열에 새로운 카드를 추가하는 것과
+
 // 특정 카드를 배열에서 삭제하는 내용의 액션 생성기를 만듭니다.
 
 // ---------- GPT 4.0 ---------- //

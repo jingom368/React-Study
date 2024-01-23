@@ -11,8 +11,8 @@ export const reducer = (state: T.State = initialState, action: T.Actions) => {
     }
     return state
 }
-
-// 마지막으로 src/store/cards/ 디렉터리의 reducers.ts 파일을 열고 다음처럼 코드를 작성합니다.
+    
+    // 마지막으로 src/store/cards/ 디렉터리의 reducers.ts 파일을 열고 다음처럼 코드를 작성합니다.
 // 그리고 웹 브라우저를 확인해 보면 사용자 카들르 추가, 삭제하는 기능을 확인할 수 있습니다.
 // 이 리듀서는 앞서 만든 2개 액션의 배열 상태를 변경합니다.
 // 리듀서는 순수 함수여야 하므로 addCard 액션에는 배열에 적용하는 비구조화 할당 구문으로 새로운 배열을 만들고,

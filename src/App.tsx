@@ -123,11 +123,21 @@ import './App.css'
 // import FetchTest from './pages/5-3. e_FetchTest'
 
 // 5-4.
-import {Provider as ReduxProvider} from 'react-redux'
+// import {Provider as ReduxProvider} from 'react-redux'
 import {useStore4} from './store'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+// import {DndProvider} from 'react-dnd'
+// import {HTML5Backend} from 'react-dnd-html5-backend'
 import Board from './pages/5-4. Board'
+
+// 6-1.
+import {Provider as ReduxProvider} from 'react-redux'
+import {DndProvider} from 'react-dnd'
+import {HTML5Backend} from 'react-dnd-html5-backend'
+import {BrowserRouter} from 'react-router-dom'
+import RoutesSetup from './routes/6-1. RoutesSetup'
+import {useStore1} from './store'
+import {combineReducers, legacy_createStore as createStore} from 'redux'
+import {AuthProvider} from './contexts'
 
 // prettier-ignore
 export default function App() {
@@ -157,7 +167,18 @@ export default function App() {
     // const store = useStore3()
 
     // 5-4.
-    const store = useStore4()
+    const store4 = useStore4()
+
+    // 6-1.
+    // const store1 = useStore1()
+
+    const rootReducer = combineReducers({
+        store4: useStore4,
+        store1: useStore1
+      });
+      
+    const store = createStore(rootReducer);
+      
 
     return (
         // 4-6.
@@ -165,9 +186,11 @@ export default function App() {
         // <ReduxProvider store={store}>
         // <main>
         
-        // 5-2. 5-3. 5-4.
-        <ReduxProvider store = {store}> 
+        // 5-2. 5-3. 5-4. 6-1.
+        <ReduxProvider store = {store4}> 
         <DndProvider backend={HTML5Backend}>
+        <BrowserRouter>
+        <AuthProvider>
         {/* <main className='p-8'> */}
 
             {/* 2.5 */}
@@ -1214,7 +1237,7 @@ export default function App() {
             <LoadingTest />
             <LoggerTest /> */}
 
-            {/* 5-4.  */}
+            {/* 5-4. */}
             {/* 지금까지 배운 내용을 토대로 아틀라시안 사가 공급하는 트렐로 처럼 동작하는 앱을 만들어 보겠습니다.
                 트렐로는 많은 개발자가 사용하는 웹 기반의 프로젝트 관리 소프트웨어로서, 드래그 앤 드롭 방식의
                 칸반 보드를 기반으로 동작합니다. */}
@@ -1222,11 +1245,24 @@ export default function App() {
             {/* 칸반은 '시각 신호'를 뜻하는 일본어로서 도요타 자동차 창업주가 처음 고안했습니다.
                 칸반 보드는 작업을 시각적으로 표시해 주어 프로젝트 관리를 쉽게 할 수 있도록 돕습니다. 
                 카드 목록을 수직 방향으로 구성하며 각 목록이나 카드는 드래그 앤 드롭으로 소속이나 순서를 자유롭게 변경할 수 있습니다. */}
+            {/* <Board /> */}
 
-            <Board />
+            {/* 6-1. 처음 만나는 리액트 라우터 */}
+            {/* Home, Link, useNavigate, 라우트 변수(:cardid), useLocation, useParams, useSearchParams 
+                Card 컴포넌트에 리액트 라우터 훅 적용하기, 카드 상세 페이지 만들기 */}
+            {/* 6-2. Outlet 컴포넌트와 중첩 라우팅 */}
+            {/* Outlet, 색인 라우트, navbar/footer, Landing Page(Hero, Promotion) 
+                Custom Link, useResolvedPath, useMatch */}
+            {/* 6-3. 공개 라우트와 비공개 라우트 구현하기 */}
+            {/* 공개 라우트와 비공개 라우트 : 사용자 인증 컨텍스트 만들기, 로그인 여부에 따라 내비게이션 메뉴 구분하기 */}
+            {/* 회원 가입 기능 만들기 : 웹 브라우저를 종료해도 지워지지 않는 저장소 이용하기 */}
+            {/* 로그인 기능 만들기, 로그아웃 기능 만들기, 로그인한 사용자만 접근하도록 막기 */}
+            <RoutesSetup />
 
         {/* </main> */}
         {/* 5-2. 5-3. 5-4. */}
+        </AuthProvider >
+        </BrowserRouter>
         </ DndProvider>
         </ReduxProvider>
 

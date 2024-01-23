@@ -1,3 +1,4 @@
+import type {DropResult} from 'react-beautiful-dnd'
 import {useCallback} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import type {AppState4} from './5-4. e_Appstate'
@@ -6,6 +7,7 @@ import * as LO from './5-4. listidOrders'
 import * as L from './5-4. listEntities'
 import * as C from './5-4. cardEntities'
 import * as LC from './5-4. listidCardidOrders'
+import * as U from '../utils'
 
 export const useLists = () => {
     const dispatch = useDispatch()
@@ -17,7 +19,9 @@ export const useLists = () => {
         ({listidCardidOrders}) => listidCardidOrders
     )
 
-    const listidOrders = useSelector<AppState4, LO.State>(({listidOrders}) => listidOrders) // 추가 2
+    const listidOrders = useSelector<AppState4, LO.State>(
+        ({listidOrders}) => listidOrders
+    ) // 추가 2
 
     const onCreateList = useCallback(
         (uuid: string, title: string) => {
@@ -41,21 +45,74 @@ export const useLists = () => {
         [dispatch, listidCardidOrders]
     )
 
-    const onMoveList = useCallback( // 추가 2
+    const onMoveList = useCallback(
+        // 추가 2
         (dragIndex: number, hoverIndex: number) => {
-            const newOrders = listidOrders.map((item, index) => 
+            const newOrders = listidOrders.map((item, index) =>
                 index === dragIndex
-                ? listidOrders[hoverIndex]
-                : index === hoverIndex
-                ? listidOrders[dragIndex]
-                : item
+                    ? listidOrders[hoverIndex]
+                    : index === hoverIndex
+                    ? listidOrders[dragIndex]
+                    : item
             )
             dispatch(LO.SetListOrders(newOrders))
         },
         [dispatch, listidOrders]
     )
 
-    return {lists, onCreateList, onRemoveList, onMoveList} // 추가 2
+    const onDragEnd = useCallback(
+        (result: DropResult) => {
+            console.log('onDragEnd result', result)
+            const destinationListid = result.destination?.droppableId
+            const destinationCardIndex = result.destination?.index
+            if (destinationListid === undefined || destinationCardIndex === undefined)
+                return
+
+            const sourceListid = result.source.droppableId
+            const sourceCardIndex = result.source.index
+
+            if (destinationListid === sourceListid) {
+                const cardidOrders = listidCardidOrders[destinationListid]
+
+                dispatch(
+                    LC.setListidCardids({
+                        listid: destinationListid,
+                        cardids: U.swapItemsInArray(
+                            cardidOrders,
+                            sourceCardIndex,
+                            destinationCardIndex
+                        )
+                    })
+                )
+            } else {
+                const sourceCardidOrders = listidCardidOrders[sourceListid]
+                dispatch(
+                    LC.setListidCardids({
+                        listid: sourceListid,
+                        cardids: U.removeItemAtIndexInArray(
+                            sourceCardidOrders,
+                            sourceCardIndex
+                        )
+                    })
+                )
+
+                const destinationCardidOrders = listidCardidOrders[destinationListid]
+                dispatch(
+                    LC.setListidCardids({
+                        listid: destinationListid,
+                        cardids: U.insertItemAtIndexInArray(
+                            destinationCardidOrders,
+                            destinationCardIndex,
+                            result.draggableId
+                        )
+                    })
+                )
+            }
+        },
+        [listidCardidOrders, dispatch]
+    )
+
+    return {lists, onCreateList, onRemoveList, onMoveList, onDragEnd} // 추가 2
 }
 
 /* 리덕스 기능을 커스텀 훅으로 만들기
@@ -96,8 +153,6 @@ const onRemoveList = useCallback(
 */
 
 // 이제 앞서 제작한 useLists 훅에 cardEntities와 listidCardidOrders 기능을 다음처럼 반영하겠습니다.
-
-
 
 // Q. onMoveList 와 이거 진짜 무슨 말인지 하나도 모르겠거든 한줄 한줄 정확하고 명확하고 상세하고 자세하게 설명해줄래?
 
@@ -142,9 +197,7 @@ index === hoverIndex ? listidOrders[dragIndex] : ... :
 그 외의 항목들은 그대로 유지합니다. 이렇게 해서 드래그 앤 드롭으로 항목의 순서를 변경하는 것을 구현하고 있는 것입니다.
 */
 
-
-
-// Q. hover(item: DragItem) 하고 const onMoveList 
+// Q. hover(item: DragItem) 하고 const onMoveList
 // 이 부분 연결해서 아주 상세하게 설명해줄 수 있을까? 무슨 흐름인지 파악하기가 힘드네
 
 /*
@@ -171,4 +224,80 @@ map 함수 내부에서 드래그 항목과 호버 항목의 위치를 바꿉니
 dispatch(LO.SetListOrders(newOrders))에서 SetListOrders 액션을 디스패치하여 
     listidOrders의 값이 새로운 순서(newOrders)로 변경되도록 합니다.
 이렇게 hover 함수와 onMoveList 함수가 함께 작동하여 드래그 앤 드롭으로 항목의 순서를 변경하는 기능을 구현하게 됩니다.
+*/
+
+// DragDropContext가 요구하는 onDragEnd 콜백 함수를 구현하려면 먼저
+// react-beautiful-dnd가 제공하는 DropResult 타입의 실제 값을 이해해야 합니다.
+// 만약 useLists.ts 파일에 다음 내용을 구현하면 onDragEnd에서 result 매개변숫값을 관찰해 볼 수 있습니다.
+
+/* 
+    const onDragend = useCallback(
+        (result: DropResult) => {
+            console.log('onDragEnd result', result)
+        }, [])
+    
+다음은 같은 목록에서 드래그 앤 드롭으로 카드를 옮겼을 때 result 값의 내용입니다.
+source와 destination이라는 속성에 droppableId값이 있는데, 같은 목록에서 카드 순서를 바꿨으므로 이 값은 서로 같습니다.
+또한 index값은 카드의 순서를 담은 배열의 색인입니다.
+source의 index가 1이고, destination의 index가 0이므로 두 번째 카드가 첫 번째로 이동했음을 확인할 수 있습니다.
+
+그런데 타입스크립트로 result의 destination 속성은 undefined일 수 있습니다.
+타입스크립트에서는 string 타입과 string | undefined 타입은 전혀 다릅니다.
+이를 해결하려면 다음처럼 if 문으로 undefined일 때는 아무런 작업을 하지 않는 코드가 필요합니다.
+그러면 타입스크립트는 if문 이후의 값들은 더 이상 undefined 여부를 체크하지 않습니다.
+*/
+
+/*
+    const onDrageEnd = useCallback(
+        (result: DropResult) => {
+            console.log('onDragend result', result)
+            const destinationListid = result.destination?.droppableId
+            const destinationCardIndex = result.destination?.index
+            if (destinationListid === undefined || destinationCardIndex === undefined) return
+        }
+    )
+
+같은 목록에서 카드를 옮길 때는 카드의 두 색인 값 source.draggableId와 destination.draggableId를 교체해 줘야 합니다.
+그리고 이 작업은 아퍼 구현해 놓은 arrayUtil.ts 파일에서 swapItemsInArray 함수를 사용하면 다음처럼 쉽게 구현할 수 있습니다.
+*/
+
+/* 같은 목록에서 카드 옮기기
+    const sourceListid = result.source.droppableId
+    const sourceCardIndex = result.source.index
+
+    if (destinationListid === sourceListid) {
+        const cardidOrders = listidCardidOrders[destinationListid]
+
+        dispatch(
+            LC.setListidCardids({
+                listid: destinationListid,
+                cardids: U.swapItemsInArray(cardidOrders, sourceCardIndex, destinationCardIndex)
+            })
+        )
+    }
+
+카드를 다른 목록으로 옮길 때는 다음처럼 source 쪽 listid 부분에서 카드의 uuid를 삭제하고,
+destination 쪽 listid 부분에는 해당 index에 카드의 uuid를 추가해 줘야 합니다.
+*/
+
+/* 다른 목록에서 카드 옮기기
+    const sourceCardidOrders = listidCardidOrders[sourceListid]
+    dispatch(
+        LC.setListCidCardids({
+            listid: sourceListid,
+            cardids: U.removeItemAtIndexInArray(sourceCardidOrders, sourceCardIndex)
+        })
+    )
+
+    const dstinnationCardidOrders = listidCardidOrders[destinationListid]
+    dispatch(
+        LC.setListidCardids({
+            listid: destinationListid,
+            cardids: U.indertItemAtIndexInArray(
+                destinationCardidOrders,
+                destinationCardIndex,
+                result.draggableId
+            )
+        })
+    )
 */

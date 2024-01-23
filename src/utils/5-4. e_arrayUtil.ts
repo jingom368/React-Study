@@ -54,3 +54,24 @@ export const insertItemAtIndexInArray = <T>(array: T[], insertIndex: number, ite
     return [...before, item, ...after]를 통해 before 배열, 삽입하려는 item, 그리고 after 배열을 합쳐서 새 배열을 반환합니다. 
     이렇게 하면 insertIndex 위치에 item이 삽입된 새 배열이 반환됩니다.
 */
+
+
+// Q. 이게 왜 스왑하는 건지 한줄한줄 아주 자세하고 상세하게 해석해줄래....
+// 특히 index === index1 ? array[index2] : index === index2 ? array[index1] : item
+// 이부분이 어떻게 해석해야 하는 건지 이해가 잘 안가
+
+/*
+index === index1 ? array[index2] : index === index2 ? array[index1] : item
+이 부분은 삼항 연산자를 사용하여 각 항목을 처리하는 로직입니다. 삼항 연산자는 '조건 ? 참일 때의 값 : 거짓일 때의 값' 형태로 사용됩니다.
+
+이 부분을 좀 더 자세히 살펴보겠습니다.
+index === index1 ? array[index2] :
+현재 인덱스가 'index1'과 같으면, 'array[index2]'를 반환합니다. 즉, 'index1' 위치의 요소를 'index2' 위치의 요소로 교체합니다.
+index === index2 ? array[index1] :
+현재 인덱스가 'index2'와 같으면, 'array[index1]'를 반환합니다. 즉, 'index2' 위치의 요소를 'index1' 위치의 요소로 교체합니다.
+item
+위의 두 조건이 모두 만족하지 않으면, 원래 항목을 그대로 반환합니다. 즉, 교환 대상이 아닌 항목들은 그대로 유지됩니다.
+결과적으로, 이 함수는 'index1'과 'index2' 위치의 요소를 서로 교환한 새 배열을 반환합니다. 
+    이는 원본 배열을 변경하지 않고, 교환된 요소를 포함한 새로운 배열을 생성하는 순수 함수(pure function)의 특성을 가지고 있습니다.
+
+*/

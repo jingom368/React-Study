@@ -2,7 +2,9 @@ import type {FC} from 'react'
 import type {List} from '../../store/5-4. e_commonTypes'
 import type {MoveFunc} from '../../components' // 추가 2
 
-import {useMemo} from 'react' // 추가
+import {useMemo, useCallback} from 'react' // 추가 // 추가4
+import {useNavigate} from 'react-router-dom'
+
 import {Div} from '../../components' // 추가
 import {CardDroppable} from '../../components' // 추가 3
 import {Icon} from '../../theme/daisyui'
@@ -25,6 +27,14 @@ const BoardList: FC<BoardListProps> = ({
 }) => {
     const {cards, onPrependCard, onAppendCard, onRemoveCard} = useCards(list.uuid)
 
+    const navigate = useNavigate()
+    const cardClicked = useCallback(
+        (cardid: string) => () => {
+            navigate(`/board/card/${cardid}`)
+        },
+        [navigate]
+    )
+
     const children = useMemo(
         () =>
             cards.map((card, index) => (
@@ -34,6 +44,7 @@ const BoardList: FC<BoardListProps> = ({
                     onRemove={onRemoveCard(card.uuid)}
                     draggableId={card.uuid} // 추가 3
                     index={index} // 추가 3
+                    onClick={cardClicked(card.uuid)}
                 />
             )),
         [cards, onRemoveCard]
@@ -70,7 +81,8 @@ const BoardList: FC<BoardListProps> = ({
                     </div>
                 </div>
                 {/* <div className="flex flex-col p-2">{children}</div> 삭제3 */}
-                <CardDroppable droppableId={list.uuid}>{children}</CardDroppable> 추가 3
+                <CardDroppable droppableId={list.uuid}>{children}</CardDroppable>
+                {/* 추가3 */}
             </Div>
         </ListDraggable>
     )
@@ -114,3 +126,18 @@ const lists = useSelector<AppState, List[]>(({listidOrders, listEntities}) =>
 // ListDraggable이 요구하는 index와 onMoveList 함수를 Board로부터 받기 위해 이 2개의 속성을 추가로 설정하고 있습니다.
 
 // 이제 다음처럼 BoardList 컴포넌트에 CardDroppable 컴포넌트를 적용합니다.
+
+
+/* 
+    라우트 변수란?
+    
+    라우트를 설정할 때 라우트 경로는 다음처럼 콜론(:)을 붙일 수 있는데, 이처럼 콜론을 앞에 붙인 uuid, title과 같은
+    심볼을 라우트 변수라고 합니다. 라우트 변수는 라우트 경로의 일정 부분이 수시로 바뀔 때마다 사용합니다.
+    예를 들어 다음처럼 cardid는 마치 변수에 담긴 값처럼 수시로 바뀔 수 있습니다.
+
+    <Route path="/board/card/:cardid" element={<Card />} />
+
+    이러한 라우트 변수를 이용해 src/pages/BoardList 디렉터리의 index.tsx 파일을 수정해 보겠습니다.
+    카드의 uuid 값을 라우트 경로에 포함해 '/board/card' 부분은 같지만, 경로 끝의 카드 uuid 값에 따라
+    라우트 경로가 수시로 바뀌도록 했습니다.
+*/
