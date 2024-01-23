@@ -1,49 +1,20 @@
-# Getting Started with Create React App
+<h2>리액트 개인 프로젝트</h2>
+<p>타입스크립트와 함께하는 리액트 모던 웹 개발 책을 통해 React 프로젝트를 독학</p>
+<p>· 팀 프로젝트를 위해 600페이지 분량의 리액트 교재를 독학하여 완독</p>
+ 
+ · 프로젝트 성과 : 타입스크립트 사용법과 리액트 문법을 직접 실습하여 학습
+   1) 리액트 개발 환경 설정에 능숙
+   2) 리액트 동작원리(DOM/JSX/컴포넌트)에 대해서 심층적으로 공부
+   3) 프로젝트에 TailwindCSS 완벽하게 적용 가능
+   4) 함수형 컴포넌트와 리액트 훅에 대한 심층적 이해를 바탕으로 활용할 수 있는 능력 향상
+   5) 리덕스를 활용한 프로젝트의 상태 관리 방법을 깊이 이해
+   6) 리액트 라우터를 통해 프로젝트 구조 설계 능력 향상
+   7) Express 프레임워크와 MongoDB를 활용한 API 서버 구축 경험
+     
+- 트렐로를 모방한 프로젝트를 통해 Action, dispatch, store, reducer를 활용하는 redux에 대한 전반적인 이해와 복잡한 이중 배열의 CRUD 구현 경험
+- 기존 프로젝트의 useContext를 Redux Flux 패턴으로 변경하기 위한 추가적인 독학을 진행
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+<div><img src="https://github.com/jingom368/React-Study/assets/67932739/41cfab3c-8507-4505-a5c4-c07efa079c67" ></div>
 
 ```
 ├─ src
